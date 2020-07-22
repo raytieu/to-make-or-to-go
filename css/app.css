@@ -1,67 +1,112 @@
-/* Container needed to position the button. Adjust the width as needed */
+body {
+    background-color: rgb(226, 210, 145);
+}
+/*================================================================================*/
+#main-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* 2 background image containers (use 25% for four, and 50% for two, etc) */
+.column {
+    float: left;
+    width: 50%;
+    padding: 5px;
+}
 
-.to-make-button {
+/* Clear floats after image containers */
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/*================================================================================*/
+
+/*position the button. Adjust the width as needed */
+
+.column {
     position: relative;
     width: 50%;
 }
 
 /* Make the image responsive */
 
-.to-make-button img {
+.column img {
     width: 100%;
     height: auto;
 }
 
-/* Style the button and place it in the middle of the container/image */
+/* Style the button & place it in the middle of the container/image */
 
-.to-make-button.btn {
+.column .btn {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
-    background-color: #555;
+    background-color: #72b6de;
     color: white;
-    font-size: 16px;
+    font-size: 30px;
     padding: 12px 24px;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
 }
 
-.to-go-button.btn:hover {
-    background-color: black;
+.column .btn:hover {
+    background-color: #7298de;
 }
 
-.to-go-button {
-    position: relative;
-    width: 50%;
+/*================================================================================*/
+
+.header img {
+    width: 10%;
+    float: middle;
 }
 
-/* Make the image responsive */
+nav {
+    float: right;
+    margin-top: 25px;
+}
 
-.to-go-button img {
+nav a {
+    display: inline-block;
+    margin-left: 15px;
+    padding-left: 15px;
+    text-decoration: none;
+    line-height: 20px;
+    color: #999;
+    border-left: 1px solid #efefef;
+}
+
+nav a:first-child {
+    border-left: 0 none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+    text-decoration-color: #470a0a;
+}
+
+/* footer */
+
+footer {
+    clear: both;
+    font-size: 15px;
+    text-align: center;
+    padding: 25px 0;
+    margin-top: -90px;
+    border-top: 8px solid #7faf5a;
+    background: #ccdecc;
+    color: rgb(5, 16, 20);
+    position: fixed;
+    left: 0;
+    bottom: 0;
     width: 100%;
-    height: auto;
-}
-
-/* Style the button and place it in the middle of the container/image */
-
-.to-go-button.btn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    background-color: #555;
-    color: white;
-    font-size: 16px;
-    padding: 12px 24px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.to-go-button.btn:hover {
-    background-color: black;
 }
