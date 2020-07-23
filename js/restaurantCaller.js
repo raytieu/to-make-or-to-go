@@ -40,7 +40,6 @@ $(document).ready(function () {
     e.preventDefault();
     let target = $(e.target)
     if (target.hasClass("search-modal-btn")) {
-
       const type = target.attr("data-search-type");
       if (type === "make") {
         let value = $(".search-input").val();
