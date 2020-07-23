@@ -92,14 +92,14 @@ body {
     color: white;
 }
 
-.about img{
-    opacity: 0.5;
+.about img {
+    opacity: 0.3;
 }
 
 /* Centered text */
 
 .details {
-    font-size: 20 px;
+    font-size: 20px;
     position: absolute;
     top: 50%;
     left: 50%;
