@@ -46,13 +46,13 @@ $(document).ready(function () {
           let address = business.location.display_address;
           resultDisplay.append(
             $(`<div></div>`).html(
-              `<h5><a href="" data-id="${business.id}">${business.name}</a> ${business.price}</h5>
+              `<h5><a href="" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
               <p>${address[0]} ${address[1]}</p>
               <p>${business.phone}</p>
               <img src="${business.image_url}" alt="${business.name}" width="300" height="200"/>
             `)
           );
-          console.log(business)
+
         }
       } else {
 
