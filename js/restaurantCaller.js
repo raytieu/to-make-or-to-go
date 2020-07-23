@@ -1,34 +1,61 @@
+//Initializing Foundation Framework
+$(document).foundation();
 $(document).ready(function () {
-  const apiKey = 'EcekOi57siTKO6p6p9D5elbIoA0MqCpOTQU-E9D2UH6vuvZ3JAy8s9c4aDAhKxMQ9NieE0DP6oY7UPrBx-Xql4ISVlnBagKJHV_Swb7oxAqWvX6dR-vpm0FSmGMWX3Yx';
 
-  function yelpCaller(search) {
-    let searchVal = 'pho';
-    let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${searchVal}&`;
+  let searchModalContent = $(".search-modal-content");
+  let modal = $("#search-modal");
 
-    navigator.geolocation.getCurrentPosition(function (position) {
-      callYelp(`${queryUrl}latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
-    },
-      function (error) {
-        // alert("Sorry, your browser does not support HTML5 geolocation.");
-        callYelp(`${queryUrl}location=orange county`)
-      });
+  $(".to-make-btn").on("click", function (e) {
+    e.preventDefault()
+    parseSearchContent("to make");
+    modal.foundation('open');
+  });
+
+  $(".to-go-btn").on("click", function (e) {
+    e.preventDefault()
+    parseSearchContent("to go");
+    modal.foundation('open');
+  });
+
+  let parseSearchContent = (type) => {
+
+    searchModalContent.empty()
+    if (type === "to make") {
+      searchModalContent.append(
+        $(`<h4></h4>`).text("To Make"),
+        $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Chicken" class="search-input" />`),
+        $(`<button type="button" class="success button search-modal-btn" data-search-type="make" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
+      );
+    } else {
+      searchModalContent.append(
+        $(`<h4></h4>`).text("To Go"),
+        $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Fried Chicken" class="search-input" />`),
+        $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orang County, Irvine, Texas" class="search-location" />`),
+        $(`<button type="button" class="success button search-modal-btn" data-search-type="go" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
+      );
+    }
   }
 
+  searchModalContent.on("click", function (e) {
+    e.preventDefault();
+    let target = $(e.target)
+    if (target.hasClass("search-modal-btn")) {
 
+      const type = target.attr("data-search-type");
+      if (type === "make") {
+        let value = $(".search-input").val();
+        if (value) {
+          window.location.href = `${window.location.pathname.split('/').splice(1, 4).join('/')}/result.html?type=make&search=${value}`;
+        }
+      } else {
+        let value = $(".search-input").val();
+        let location = $(".search-location").val();
+        if (value && location) {
+          window.location.href = `${window.location.pathname.split('/').splice(1, 4).join('/')}/result.html?type=go&search=${value}&location=${location}`;
+        }
+      }
+    }
+  });
 
-  let callYelp = (queryUrl) => {
-    $.ajax({
-      url: queryUrl,
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`
-      },
-      dataType: 'json'
-    }).then(function (res) {
-      console.log(res)
-    })
-  }
-
-  yelpCaller();
 
 });
