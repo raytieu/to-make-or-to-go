@@ -1,5 +1,9 @@
 body {
     background-color: rgb(226, 210, 145);
+    margin-left: 20px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 img {
     display: block;
@@ -7,6 +11,7 @@ img {
     width: auto;
     height: auto;
     background-color: rgb(226, 210, 145);
+    margin-bottom: 20;
   }
   footer {
     clear: both;
@@ -21,4 +26,15 @@ img {
     left: 0;
     bottom: 0;
     width: 100%;
+
+}
+
+.button {
+  margin: 5px;
+}
+
+#btn-backToHomepage {
+  position: absolute;
+  left: 5px;
+  bottom: 10px;
 }
