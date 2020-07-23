@@ -45,7 +45,7 @@ $(document).ready(function () {
         let value = $(".search-input").val();
         if (value) {
 
-          window.location = `${window.location.pathname.split('/').splice(1, 4).join('/')}/result.html?type=make&search=${value}`;
+          window.location.href = `result.html?type=make&search=${value}`;
 
         }
       } else {
@@ -53,7 +53,7 @@ $(document).ready(function () {
         let location = $(".search-location").val();
         if (value && location) {
 
-          window.location = `${window.location.pathname.split('/').splice(1, 4).join('/')}/result.html?type=go&search=${value}&location=${location}`;
+          window.location.href = `result.html?type=go&search=${value}&location=${location}`;
 
         }
       }
