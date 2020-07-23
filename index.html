@@ -9,7 +9,7 @@
   <title> To Make or To Go </title>
   <link rel="stylesheet" href="css/foundation.min.css" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/homepage.css" />
 </head>
 
 <body>
@@ -18,10 +18,10 @@
     <div class="header">
       <a href="index.html" id="logo"> <img src="asset/logo.png" alt="web-logo"> </a>
 
-      <nav>
-        <a href="index.html"> Home </a>
-        <a href="about.html"> About </a>
-      </nav>
+      <div class= "header-options">
+        <a class="active" href="index.html"> Home </a>
+        <a href="#about"> About </a>
+      </div>
     </div>
   </header>
 
@@ -43,6 +43,18 @@
     <button class="close-button" data-close aria-label="Close modal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
+  </div>
+
+  <div class="about">
+    <img src="asset/food.jpg" alt="about" style="width:100%">
+    <div class="details">
+      <p> 
+      PROBLEM: Eating meals are an essential part of our daily lives. The problem we are always faced with though, is, "What to eat?". <br>
+      SOLUTION: With "TO MAKE OR TO GO", we aim to make it more convenient for you to tackle this daily struggle. <br>
+      DETAILS: Users are prompted to decide whether they want TO MAKE their meal or TO GO to a restaurant. Upon deciding, the user will be prompted to input their preferences depending on their choice of TO MAKE or TO GO (e.g. ingredients to include,
+      location of restaurant). Once the user clicks on search, they will be provided with results to help them decide on a recipe TO MAKE or a restaurant TO GO to. <br>
+      As an added bonus, there is a random button that will automatically pick a choice for the user, given their input. Users can then save their recent searches to their browser's local storage for easy access in the future.</p>
+    </div>
   </div>
 
   <footer>
