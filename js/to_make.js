@@ -14,7 +14,7 @@ $(document).ready(function () {
   }
 
   function callRecipe(searchVal) {
-    // let recipeQuery;
+    
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
     let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
@@ -24,6 +24,44 @@ $(document).ready(function () {
       method: "GET"
     }).then(function (response) {
       console.log(response);
+
+      for (i = 0; i < response.results.length; i++) {
+
+        // variable for response.results
+        let recipe = response.results[i];
+
+        // create div for each recipe
+        let recipeDiv = $("<div>");
+        $(".result-display").append(recipeDiv);
+
+        // name 
+        let recipeName = $("<p>").text("Recipe Name: " + recipe.name);
+        recipeDiv.append(recipeName);
+
+        // recipe image
+        let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).attr("width", 300).attr("height", 200);
+        recipeDiv.append(recipeImage);
+
+        // ingredient
+        
+
+        // instructions
+        for (j = 0; j < recipe.instructions.length; j++) {
+          recipeDiv.append($("<p>").text(recipe.instructions[j].position + ". " + recipe.instructions[j].display_text));
+        }
+
+        // recipe video
+        let recipeVideo = $("<video>").attr("src", recipe.original_video_url).attr("width", 300).attr("height", 200);
+
+        // user rating
+        let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+        recipeDiv.append(recipeRating);
+
+        
+        
+
+      }
+
     });
   }
 
