@@ -35,27 +35,28 @@ $(document).ready(function () {
       );
     }
   }
-
+  console.log(window.location.pathname)
   searchModalContent.on("click", function (e) {
     e.preventDefault();
     let target = $(e.target)
     if (target.hasClass("search-modal-btn")) {
-
       const type = target.attr("data-search-type");
       if (type === "make") {
         let value = $(".search-input").val();
         if (value) {
-          window.location.href = `${window.location.pathname.split('/').splice(1, 6).join('/')}/result.html?type=make&search=${value}`;
+
+          window.location = `${window.location.pathname.split('/').splice(1, 4).join('/')}/result.html?type=make&search=${value}`;
+
         }
       } else {
         let value = $(".search-input").val();
         let location = $(".search-location").val();
         if (value && location) {
-          window.location.href = `${window.location.pathname.split('/').splice(1, 6).join('/')}/result.html?type=go&search=${value}&location=${location}`;
+
+          window.location = `${window.location.pathname.split('/').splice(1, 4).join('/')}/result.html?type=go&search=${value}&location=${location}`;
+
         }
       }
     }
   });
-
-
 });

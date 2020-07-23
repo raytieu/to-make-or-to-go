@@ -3,7 +3,7 @@ $(document).ready(function () {
   let queryString = window.location.search;
   let urlParams = new URLSearchParams(queryString);
   let type = urlParams.get('type');
-
+  let resultDisplay = $(".result-display");
   if (type === "make") {
     let search = urlParams.get('search')
     callRecipe(search)
@@ -22,7 +22,7 @@ $(document).ready(function () {
     $.ajax({
       url: queryURL,
       method: "GET"
-    }).then(function (response) {
+    }).then(function (res) {
       console.log(response);
 
       for (i = 0; i < response.results.length; i++) {
@@ -69,7 +69,7 @@ $(document).ready(function () {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${searchVal}&location=${location}&limit=10`;
 
     const apiKey = 'EcekOi57siTKO6p6p9D5elbIoA0MqCpOTQU-E9D2UH6vuvZ3JAy8s9c4aDAhKxMQ9NieE0DP6oY7UPrBx-Xql4ISVlnBagKJHV_Swb7oxAqWvX6dR-vpm0FSmGMWX3Yx';
-    console.log(queryUrl)
+    // console.log(queryUrl)
     $.ajax({
       url: queryUrl,
       method: 'GET',
@@ -78,7 +78,23 @@ $(document).ready(function () {
       },
       dataType: 'json'
     }).then(function (res) {
-      console.log(res)
+      let businesses = res.businesses;
+      if (businesses.length > 0) {
+        for (business of businesses) {
+          let address = business.location.display_address;
+          resultDisplay.append(
+            $(`<div></div>`).html(
+              `<h5><a href="" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+              <p>${address[0]} ${address[1]}</p>
+              <p>${business.phone}</p>
+              <img src="${business.image_url}" alt="${business.name}" width="300" height="200"/>
+            `)
+          );
+
+        }
+      } else {
+
+      }
     })
   }
 
