@@ -44,13 +44,17 @@ $(document).ready(function () {
       if (type === "make") {
         let value = $(".search-input").val();
         if (value) {
+
           window.location.href = `result.html?type=make&search=${value}`;
+
         }
       } else {
         let value = $(".search-input").val();
         let location = $(".search-location").val();
         if (value && location) {
+
           window.location.href = `result.html?type=go&search=${value}&location=${location}`;
+
         }
       }
     }
