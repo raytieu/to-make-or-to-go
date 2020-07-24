@@ -25,48 +25,62 @@ $(document).ready(function () {
     $.ajax({
       url: queryURL,
       method: "GET"
-    }).then(function (response) {
-      console.log(response);
 
-      for (i = 0; i < response.results.length; i++) {
+    }).then(function (res) {
+      console.log(res);
+
+      // create div for each recipe
+      let recipeDiv = $("<div>");
+      $(".result-display").append(recipeDiv);
+
+      for (i = 0; i < res.results.length; i++) {
 
         // variable for response.results
-        let recipe = response.results[i];
+        let recipe = res.results[i];
+        
+        if (recipe.instructions) {
 
-        // create div for each recipe
-        let recipeDiv = $("<div>");
-        $(".result-display").append(recipeDiv);
+          // create card for each recipe
+          let recipeCard = $("<div>").addClass("card");
+          recipeDiv.append(recipeCard);
 
-        // name 
-        let recipeName = $("<p>").text("Recipe Name: " + recipe.name);
-        recipeDiv.append(recipeName);
+          // name 
+          let recipeName = $("<p>").text("Recipe Name: " + recipe.name);
+          recipeCard.append(recipeName);
 
-        // recipe image
-        let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).attr("width", 300).attr("height", 200);
-        recipeDiv.append(recipeImage);
+          // user rating
+          let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+          recipeCard.append(recipeRating);
 
-        // ingredient
+          // recipe image
+          let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
+          recipeCard.append(recipeImage);
+
+          // ingredient
+          for (j = 0; j < recipe.sections.length; j++) {
+            for (k = 0; k < recipe.sections[j].components.length; k++) {
+              recipeCard.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+            }
+          }
+          
+          // instructions
+          for (x = 0; x < recipe.instructions.length; x++) {
+              recipeCard.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
+          }
+
+          // recipe video
+          // let recipeVideo = $("<video>").attr("src", recipe.original_video_url).attr("width", 300).attr("height", 200);
 
 
-        // instructions
-        for (j = 0; j < recipe.instructions.length; j++) {
-          recipeDiv.append($("<p>").text(recipe.instructions[j].position + ". " + recipe.instructions[j].display_text));
         }
-
-        // recipe video
-        let recipeVideo = $("<video>").attr("src", recipe.original_video_url).attr("width", 300).attr("height", 200);
-
-        // user rating
-        let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
-        recipeDiv.append(recipeRating);
-
-
-
 
       }
 
     });
+
   }
+
+
 
   function yelpCaller(searchVal, location) {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${searchVal}&location=${location}&limit=10`;
