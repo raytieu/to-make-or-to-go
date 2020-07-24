@@ -1,7 +1,10 @@
 $(document).foundation();
 $(document).ready(function () {
+  // Took the Current Url
   let queryString = window.location.search;
+  // Splitting the Url Parameters from the current URL
   let urlParams = new URLSearchParams(queryString);
+  let modalResult = $("#result-modal")
   let type = urlParams.get('type');
   let resultDisplay = $(".result-display");
   if (type === "make") {
@@ -14,7 +17,7 @@ $(document).ready(function () {
   }
 
   function callRecipe(searchVal) {
-    
+
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
     let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
@@ -22,6 +25,7 @@ $(document).ready(function () {
     $.ajax({
       url: queryURL,
       method: "GET"
+
     }).then(function (res) {
       console.log(res);
 
@@ -67,6 +71,7 @@ $(document).ready(function () {
           // recipe video
           // let recipeVideo = $("<video>").attr("src", recipe.original_video_url).attr("width", 300).attr("height", 200);
 
+
         }
 
       }
@@ -96,19 +101,40 @@ $(document).ready(function () {
           let address = business.location.display_address;
           resultDisplay.append(
             $(`<div></div>`).html(
-              `<h5><a href="" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+              //Adding data id and data type for checking
+              `<h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
               <p>${address[0]} ${address[1]}</p>
               <p>${business.phone}</p>
-              <img src="${business.image_url}" alt="${business.name}" width="300" height="200"/>
+              <img src="${business.image_url}" alt="${business.name}" style="width:300px;height:200px"/>
             `)
           );
-
         }
       } else {
 
       }
     })
   }
+
+  //Attached a listener to result-display class to check if were clicking the button to show modal and parse our data
+  resultDisplay.on("click", function (e) {
+    e.preventDefault()
+    let target = $(e.target)
+    //Check if button has result-btn class
+    if (target.hasClass("result-btn")) {
+      let type = target.attr("data-type");
+      let id = target.attr("data-id");
+      console.log(`${type} - ${id}`)
+      modalResult.foundation('open');
+    }
+  });
+
+  function resultParser(type) {
+    if (type === "to-go") {
+
+    }
+  }
+
+
 
 
 

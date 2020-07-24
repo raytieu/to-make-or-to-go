@@ -4,7 +4,7 @@ $(document).ready(function () {
 
   let searchModalContent = $(".search-modal-content");
   let modal = $("#search-modal");
-
+  //Attaching a click event to the buttons
   $(".to-make-btn").on("click", function (e) {
     e.preventDefault()
     parseSearchContent("to make");
@@ -17,8 +17,9 @@ $(document).ready(function () {
     modal.foundation('open');
   });
 
-  let parseSearchContent = (type) => {
 
+  //Populate the modal content
+  let parseSearchContent = (type) => {
     searchModalContent.empty()
     if (type === "to make") {
       searchModalContent.append(
@@ -30,12 +31,13 @@ $(document).ready(function () {
       searchModalContent.append(
         $(`<h4></h4>`).text("To Go"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Fried Chicken" class="search-input" />`),
-        $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orang County, Irvine, Texas" class="search-location" />`),
+        $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orange County, Irvine, Texas" class="search-location" />`),
         $(`<button type="button" class="success button search-modal-btn" data-search-type="go" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
       );
     }
   }
-  console.log(window.location.pathname)
+
+  //Attaching a click event to modal's search button
   searchModalContent.on("click", function (e) {
     e.preventDefault();
     let target = $(e.target)
@@ -44,17 +46,13 @@ $(document).ready(function () {
       if (type === "make") {
         let value = $(".search-input").val();
         if (value) {
-
           window.location.href = `result.html?type=make&search=${value}`;
-
         }
       } else {
         let value = $(".search-input").val();
         let location = $(".search-location").val();
         if (value && location) {
-
           window.location.href = `result.html?type=go&search=${value}&location=${location}`;
-
         }
       }
     }
