@@ -31,7 +31,7 @@ $(document).ready(function () {
       searchModalContent.append(
         $(`<h4></h4>`).text("To Go"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Fried Chicken" class="search-input" />`),
-        $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orang County, Irvine, Texas" class="search-location" />`),
+        $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orange County, Irvine, Texas" class="search-location" />`),
         $(`<button type="button" class="success button search-modal-btn" data-search-type="go" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
       );
     }
