@@ -4,7 +4,7 @@ $(document).ready(function () {
 
   let searchModalContent = $(".search-modal-content");
   let modal = $("#search-modal");
-
+  //Attaching a click event to the buttons
   $(".to-make-btn").on("click", function (e) {
     e.preventDefault()
     parseSearchContent("to make");
@@ -17,8 +17,9 @@ $(document).ready(function () {
     modal.foundation('open');
   });
 
-  let parseSearchContent = (type) => {
 
+  //Populate the modal content
+  let parseSearchContent = (type) => {
     searchModalContent.empty()
     if (type === "to make") {
       searchModalContent.append(
@@ -35,7 +36,8 @@ $(document).ready(function () {
       );
     }
   }
-  console.log(window.location.pathname)
+
+  //Attaching a click event to modal's search button
   searchModalContent.on("click", function (e) {
     e.preventDefault();
     let target = $(e.target)
@@ -44,17 +46,13 @@ $(document).ready(function () {
       if (type === "make") {
         let value = $(".search-input").val();
         if (value) {
-
           window.location.href = `result.html?type=make&search=${value}`;
-
         }
       } else {
         let value = $(".search-input").val();
         let location = $(".search-location").val();
         if (value && location) {
-
           window.location.href = `result.html?type=go&search=${value}&location=${location}`;
-
         }
       }
     }
