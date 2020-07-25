@@ -32,9 +32,8 @@ $(document).ready(function () {
     }).then(function (res) {
       console.log(res);
 
-      // res.results.sort(function(a, b){return b.user_ratings-a.user_ratings});
-
       // create div for each recipe
+
       let recipeDiv = $(".result-display");
 
       for (i = 0; i < res.results.length; i++) {
@@ -49,12 +48,10 @@ $(document).ready(function () {
           let recipeCard = $("<div>").addClass("card");
           recipeDiv.append(recipeCard);
 
-          // recipe image
-          let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
-          recipeCard.append(recipeImage);
-
           // name 
+
           let recipeName = $("<h3>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
+
           recipeCard.append(recipeName);
 
           // user rating
@@ -113,6 +110,7 @@ $(document).ready(function () {
   }
 
 
+
   function yelpCaller(searchVal, location) {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${searchVal}&location=${location}&limit=20`;
 
@@ -133,12 +131,17 @@ $(document).ready(function () {
           resultDisplay.append(
             $(`<div></div>`).html(
               //Adding data id and data type for checking
-              `<h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+              //Encasing the output to a card
+              `<div class="card-divider" style="margin-bottom:5px;">
+                <h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+              </div>
+              <img src="${business.image_url}" alt="${business.name}" style="width:300px;height:200px"/>
+              <div class="card-section">
               <p>${address[0]}, ${address[1]}</p>
               <p>${business.phone}</p>
-              <img src="${business.image_url}" alt="${business.name}" style="width:300px;height:200px"/>
-            `)
-          );
+              </div>
+            `).addClass("card").css({ "width": '60%', "display": "inline-block" })
+          ).css({ "text-align": "center" });
         }
       } else {
 
@@ -147,16 +150,16 @@ $(document).ready(function () {
   }
 
   //Attached a listener to result-display class to check if were clicking the button to show modal and parse our data
-  resultDisplay.on("click", function (e) {
+  resultDisplay.on("click", ".result-btn", function (e) {
     e.preventDefault()
-    let target = $(e.target)
+    // let target = $(e.target)
     //Check if button has result-btn class
-    if (target.hasClass("result-btn")) {
-      let type = target.attr("data-type");
-      let id = target.attr("data-id");
-      resultParser(id, type)
-      modalResult.foundation('open');
-    }
+    // if (target.hasClass("result-btn")) {
+    let type = $(this).attr("data-type");
+    let id = $(this).attr("data-id");
+    resultParser(id, type)
+    modalResult.foundation('open');
+    // }
   });
 
   function resultParser(id, type) {

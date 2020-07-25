@@ -38,23 +38,24 @@ $(document).ready(function () {
   }
 
   //Attaching a click event to modal's search button
-  searchModalContent.on("click", function (e) {
+  // Event delegation using jQuery container.on(event,selector,function)
+  searchModalContent.on("click", ".search-modal-btn", function (e) {
     e.preventDefault();
-    let target = $(e.target)
-    if (target.hasClass("search-modal-btn")) {
-      const type = target.attr("data-search-type");
-      if (type === "make") {
-        let value = $(".search-input").val();
-        if (value) {
-          window.location.href = `result.html?type=make&search=${value}`;
-        }
-      } else {
-        let value = $(".search-input").val();
-        let location = $(".search-location").val();
-        if (value && location) {
-          window.location.href = `result.html?type=go&search=${value}&location=${location}`;
-        }
+    // let target = $(e.target)
+    // if (target.hasClass("search-modal-btn")) {
+    const type = $(this).attr("data-search-type");
+    if (type === "make") {
+      let value = $(".search-input").val();
+      if (value) {
+        window.location.href = `result.html?type=make&search=${value}`;
+      }
+    } else {
+      let value = $(".search-input").val();
+      let location = $(".search-location").val();
+      if (value && location) {
+        window.location.href = `result.html?type=go&search=${value}&location=${location}`;
       }
     }
+    // }
   });
 });
