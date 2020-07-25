@@ -48,14 +48,16 @@ $(document).ready(function () {
           let recipeCard = $("<div>").addClass("card");
           recipeDiv.append(recipeCard);
 
-          // name 
+          // Recipe image
+          let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
+          recipeCard.append(recipeImage);
 
+          // Name
           let recipeName = $("<h3>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
-
           recipeCard.append(recipeName);
 
-          // user rating
-          let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+          // User rating
+          let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative; " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
           recipeCard.append(recipeRating);
 
           $(".recipe-name").click(function(e) {
