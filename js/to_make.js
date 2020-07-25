@@ -24,75 +24,61 @@ $(document).ready(function () {
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
     let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
-    console.log(queryURL)
-    
+
+    // console.log(queryURL)
+
     $.ajax({
       url: queryURL,
       method: "GET"
     }).then(function (res) {
-      console.log(res);
+      // console.log(res);
 
-      let recipeDiv = $(".result-display").css({ "text-align": "center" });
+      // create div for each recipe
 
-      // Gatekeeper in case there are no results
-      if (res.results.length > 0) {
+      let recipeDiv = $(".result-display");
 
-        for (i = 0; i < res.results.length; i++) {
+      for (i = 0; i < res.results.length; i++) {
 
-          // variable for response.results
-          let recipe = res.results[i];
+        // variable for response.results
+        let recipe = res.results[i];
 
-          // condition because api call is inconsistent
-          if (recipe.instructions) {
+        // condition because api call is inconsistent
+        if (recipe.instructions) {
 
-            // Create card for each recipe
-            let recipeCard = $("<div>").addClass("card").css({ "width": '60%', "display": "inline-block" });
-            let recipeDivider = $("<div>").addClass("card-divider").css({ "text-align": "center" });
-            let recipeSection = $("<div>").addClass("card-section");
-            
-            // Name
-            let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
-            
-            // Recipe image
-            let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
-            recipeCard.append(recipeImage);
+          // create card for each recipe
+          let recipeCard = $("<div>").addClass("card");
+          recipeDiv.append(recipeCard);
 
-            // User rating
-            let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative; " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
-            
-            recipeDiv.append(recipeCard);
-            recipeDivider.append(recipeName);
-            recipeSection.append(recipeRating);
+          // name 
 
-            recipeCard.append(recipeDivider, recipeImage, recipeSection);
-            
-            $(".recipe-name").click(function(e) {
+          let recipeName = $("<h3>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
 
-              e.preventDefault();
-              let recipeID = $(this).attr("data-id");
+          recipeCard.append(recipeName);
 
-              if (recipe.id == recipeID) {
+          // user rating
+          let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+          recipeCard.append(recipeRating);
 
-                resultModalContent.empty();
+          $(".recipe-name").click(function (e) {
 
-                let recipeCard = $("<div>").addClass("card");
-                let recipeDivider = $("<div>").addClass("card-divider");
-                let recipeSection = $("<div>").addClass("card-section");
+            e.preventDefault();
+            let recipeID = $(this).attr("data-id");
 
-                let recipeName = $("<h4>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
-                let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
-                let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
-                
-                resultModalContent.append(recipeCard);
-                recipeCard.append(recipeDivider, recipeImage, recipeSection);
-                recipeDivider.append(recipeName);
-                recipeSection.append(recipeRating);
+            if (recipe.id == recipeID) {
 
-                // Video Link if it exists
-                if (recipe.original_video_url) {
-                  let recipeVideo = $("<p>").html("<strong>Video:</strong> ").append($("<a>").attr({"href": recipe.original_video_url, "target": "_blank"}).text(recipe.original_video_url));
-                  recipeSection.append(recipeVideo);
-                }
+              resultModalContent.empty();
+
+              let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "width": "300", "height": "200" });
+              let recipeName = $("<h3>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
+              let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+
+              resultModalContent.append(recipeImage, recipeName, recipeRating);
+
+              // Video Link if it exists
+              if (recipe.original_video_url) {
+                let recipeVideo = $("<p>").text("Video: ").append($("<a>").attr({ "href": recipe.original_video_url, "target": "_blank" }).text(recipe.original_video_url));
+                resultModalContent.append(recipeVideo);
+              }
 
                 // Ingredients
                 recipeSection.append($("<h4>").text("Ingredients:"));
@@ -104,23 +90,22 @@ $(document).ready(function () {
                   }
                 }
 
-                // Instructions of Recipe
-                recipeSection.append($("<h4>").text("Instructions:"));
-                for (x = 0; x < recipe.instructions.length; x++) {
-                  recipeSection.append($("<p>").html("<strong>" + recipe.instructions[x].position + "</strong>" + ". " + recipe.instructions[x].display_text));
-                }
-            
+              // Instructions of Recipe
+              resultModalContent.append($("<h4>").text("Instructions:"));
+              for (x = 0; x < recipe.instructions.length; x++) {
+                resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
               }
 
-              modalResult.foundation('open');
+            }
 
+              modalResult.foundation('open');
             });
 
           }
 
         }
       }
-      else {}
+      storeSearches(searchVal, 'make', queryURL);
 
     });
 
@@ -141,7 +126,9 @@ $(document).ready(function () {
       dataType: 'json'
     }).then(function (res) {
       let businesses = res.businesses;
+      // console.log(res)
       if (businesses.length > 0) {
+
         for (business of businesses) {
           let address = business.location.display_address;
           resultDisplay.append(
@@ -159,8 +146,11 @@ $(document).ready(function () {
             `).addClass("card").css({ "width": '60%', "display": "inline-block" })
           ).css({ "text-align": "center" });
         }
+        storeSearches([searchVal, location], 'go', queryUrl);
       } else {
-
+        resultDisplay.html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
+                              <h5>No Results Found!</h5>
+                            </div>`)
       }
     })
   }
@@ -168,21 +158,18 @@ $(document).ready(function () {
   //Attached a listener to result-display class to check if were clicking the button to show modal and parse our data
   resultDisplay.on("click", ".result-btn", function (e) {
     e.preventDefault()
-    // let target = $(e.target)
-    //Check if button has result-btn class
-    // if (target.hasClass("result-btn")) {
     let type = $(this).attr("data-type");
     let id = $(this).attr("data-id");
-    resultParser(id, type)
-    modalResult.foundation('open');
-    // }
-  });
-
-  function resultParser(id, type) {
-    if (type === "to-go") {
+    if (type === 'to-go') {
       yelpResultCaller(id)
     }
-  }
+  });
+
+  // function resultParser(id, type) {
+  //   if (type === "to-go") {
+
+  //   }
+  // }
 
   function yelpResultCaller(id) {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}`;
@@ -219,11 +206,30 @@ $(document).ready(function () {
       cardSection.append(phoneNum, address, rating, transaction, map)
       card.append(cardDivider, resImg, cardSection)
       resultModalContent.append(card)
+      modalResult.foundation('open');
     })
   }
 
-
-
-
+  function storeSearches(search, type, url) {
+    // console.log(search[0] ? search[0] : search)
+    let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
+    const searchObjInit = {
+      search: Array.isArray(search) ? search[0] : search,
+      location: Array.isArray(search) ? search[1] : '',
+      url: url,
+      type: type,
+    };
+    // console.log(searchObjInit);
+    if (storedSearches === null) {
+      storedSearches = [];
+      storedSearches.push(searchObjInit);
+    } else {
+      let searchObj = storedSearches.find(element => element.url === url);
+      if (!searchObj) {
+        storedSearches.push(searchObjInit);
+      }
+    }
+    localStorage.setItem("toMakeToGo", JSON.stringify(storedSearches));
+  }
 
 });
