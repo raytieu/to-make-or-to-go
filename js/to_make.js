@@ -24,12 +24,14 @@ $(document).ready(function () {
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
     let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
-    console.log(queryURL)
-    
+
+    // console.log(queryURL)
+
     $.ajax({
       url: queryURL,
       method: "GET"
     }).then(function (res) {
+      
       console.log(res);
 
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
@@ -121,35 +123,37 @@ $(document).ready(function () {
                   recipeSection.append(recipeVideo);
                 }
 
-                // Ingredients
-                recipeSection.append($("<h4>").text("Ingredients:"));
-                let ingredientList = $("<ul>");
-                recipeSection.append(ingredientList);
-                for (j = 0; j < recipe.sections.length; j++) {
-                  for (k = 0; k < recipe.sections[j].components.length; k++) {
-                    ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
-                  }
+              // Ingredients
+              recipeSection.append($("<h4>").text("Ingredients:"));
+              let ingredientList = $("<ul>");
+              recipeSection.append(ingredientList);
+              for (j = 0; j < recipe.sections.length; j++) {
+                for (k = 0; k < recipe.sections[j].components.length; k++) {
+                  ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
                 }
-
-                // Instructions of Recipe
-                recipeSection.append($("<h4>").text("Instructions:"));
-                for (x = 0; x < recipe.instructions.length; x++) {
-                  recipeSection.append($("<p>").html("<strong>" + recipe.instructions[x].position + "</strong>" + ". " + recipe.instructions[x].display_text));
-                }
-            
               }
 
-              modalResult.foundation('open');
+              // Instructions of Recipe
+              resultModalContent.append($("<h4>").text("Instructions:"));
+              for (x = 0; x < recipe.instructions.length; x++) {
+                resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
+              }
 
-            });
+            }
 
-          }
+            modalResult.foundation('open');
+              
+          });
 
         }
+
         }
 
       else {}
 
+      }
+      storeSearches(searchVal, 'make', queryURL);
+      
     });
 
   }
@@ -169,7 +173,9 @@ $(document).ready(function () {
       dataType: 'json'
     }).then(function (res) {
       let businesses = res.businesses;
+      // console.log(res)
       if (businesses.length > 0) {
+
         for (business of businesses) {
           let address = business.location.display_address;
           resultDisplay.append(
@@ -187,8 +193,11 @@ $(document).ready(function () {
             `).addClass("card").css({ "width": '60%', "display": "inline-block" })
           ).css({ "text-align": "center" });
         }
+        storeSearches([searchVal, location], 'go', queryUrl);
       } else {
-
+        resultDisplay.html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
+                              <h5>No Results Found!</h5>
+                            </div>`)
       }
     })
   }
@@ -196,21 +205,18 @@ $(document).ready(function () {
   //Attached a listener to result-display class to check if were clicking the button to show modal and parse our data
   resultDisplay.on("click", ".result-btn", function (e) {
     e.preventDefault()
-    // let target = $(e.target)
-    //Check if button has result-btn class
-    // if (target.hasClass("result-btn")) {
     let type = $(this).attr("data-type");
     let id = $(this).attr("data-id");
-    resultParser(id, type)
-    modalResult.foundation('open');
-    // }
-  });
-
-  function resultParser(id, type) {
-    if (type === "to-go") {
+    if (type === 'to-go') {
       yelpResultCaller(id)
     }
-  }
+  });
+
+  // function resultParser(id, type) {
+  //   if (type === "to-go") {
+
+  //   }
+  // }
 
   function yelpResultCaller(id) {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}`;
@@ -247,11 +253,30 @@ $(document).ready(function () {
       cardSection.append(phoneNum, address, rating, transaction, map)
       card.append(cardDivider, resImg, cardSection)
       resultModalContent.append(card)
+      modalResult.foundation('open');
     })
   }
 
-
-
-
+  function storeSearches(search, type, url) {
+    // console.log(search[0] ? search[0] : search)
+    let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
+    const searchObjInit = {
+      search: Array.isArray(search) ? search[0] : search,
+      location: Array.isArray(search) ? search[1] : '',
+      url: url,
+      type: type,
+    };
+    // console.log(searchObjInit);
+    if (storedSearches === null) {
+      storedSearches = [];
+      storedSearches.push(searchObjInit);
+    } else {
+      let searchObj = storedSearches.find(element => element.url === url);
+      if (!searchObj) {
+        storedSearches.push(searchObjInit);
+      }
+    }
+    localStorage.setItem("toMakeToGo", JSON.stringify(storedSearches));
+  }
 
 });
