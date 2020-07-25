@@ -36,18 +36,13 @@ $(document).ready(function () {
 
       // create div for each recipe
       let recipeDiv = $(".result-display");
-      let recipeDetail = $("<div>");
-      $(".row").append(recipeDetail);
-
 
       for (i = 0; i < res.results.length; i++) {
 
         // variable for response.results
         let recipe = res.results[i];
 
-        
         // condition because api call is inconsistent
-
         if (recipe.instructions) {
 
           // create card for each recipe
@@ -59,47 +54,53 @@ $(document).ready(function () {
           recipeCard.append(recipeImage);
 
           // name 
-          let recipeName = $("<h3>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
+          let recipeName = $("<h3>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
           recipeCard.append(recipeName);
 
           // user rating
           let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
           recipeCard.append(recipeRating);
 
-          // recipe video
-          // let recipeVideo = $("<video>").attr("src", recipe.original_video_url).attr("width", 300).attr("height", 200);
+          $(".recipe-name").click(function(e) {
 
-          $(".recipe-name").click(function() {
-
+            e.preventDefault();
             let recipeID = $(this).attr("data-id");
 
             if (recipe.id == recipeID) {
 
-              let recipeName = $("<h3>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
+              resultModalContent.empty();
 
+              let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
+              let recipeName = $("<h3>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
               let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
               
-              let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
+              resultModalContent.append(recipeImage, recipeName, recipeRating);
 
-              recipeDetail.append(recipeImage).append(recipeName).append(recipeRating);
+              // Video Link if it exists
+              if (recipe.original_video_url) {
+                let recipeVideo = $("<p>").text("Video: ").append($("<a>").attr({"href": recipe.original_video_url, "target": "_blank"}).text(recipe.original_video_url));
+                resultModalContent.append(recipeVideo);
+              }
 
-              // ingredient
-              recipeDetail.append($("<h4>").text("Ingredients:"));
+              // Ingredients
+              resultModalContent.append($("<h4>").text("Ingredients:"));
               let ingredientList = $("<ul>");
-              recipeDetail.append(ingredientList);
+              resultModalContent.append(ingredientList);
               for (j = 0; j < recipe.sections.length; j++) {
                 for (k = 0; k < recipe.sections[j].components.length; k++) {
                   ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
                 }
               }
 
-              // instructions
-              recipeDetail.append($("<h4>").text("Instructions:"));
+              // Instructions of Recipe
+              resultModalContent.append($("<h4>").text("Instructions:"));
               for (x = 0; x < recipe.instructions.length; x++) {
-                  recipeDetail.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
+                resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
               }
-
+          
             }
+
+            modalResult.foundation('open');
 
           });
 
