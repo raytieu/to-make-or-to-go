@@ -24,11 +24,12 @@ $(document).ready(function () {
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
     let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
+
     // console.log(queryURL)
+
     $.ajax({
       url: queryURL,
       method: "GET"
-
     }).then(function (res) {
       // console.log(res);
 
@@ -79,15 +80,15 @@ $(document).ready(function () {
                 resultModalContent.append(recipeVideo);
               }
 
-              // Ingredients
-              resultModalContent.append($("<h4>").text("Ingredients:"));
-              let ingredientList = $("<ul>");
-              resultModalContent.append(ingredientList);
-              for (j = 0; j < recipe.sections.length; j++) {
-                for (k = 0; k < recipe.sections[j].components.length; k++) {
-                  ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+                // Ingredients
+                recipeSection.append($("<h4>").text("Ingredients:"));
+                let ingredientList = $("<ul>");
+                recipeSection.append(ingredientList);
+                for (j = 0; j < recipe.sections.length; j++) {
+                  for (k = 0; k < recipe.sections[j].components.length; k++) {
+                    ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+                  }
                 }
-              }
 
               // Instructions of Recipe
               resultModalContent.append($("<h4>").text("Instructions:"));
@@ -97,19 +98,18 @@ $(document).ready(function () {
 
             }
 
-            modalResult.foundation('open');
+              modalResult.foundation('open');
+            });
 
-          });
+          }
 
         }
-
       }
       storeSearches(searchVal, 'make', queryURL);
 
     });
 
   }
-
 
 
   function yelpCaller(searchVal, location) {
