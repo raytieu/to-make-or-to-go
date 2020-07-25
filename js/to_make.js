@@ -31,54 +31,97 @@ $(document).ready(function () {
       url: queryURL,
       method: "GET"
     }).then(function (res) {
-      // console.log(res);
+      
+      console.log(res);
 
-      // create div for each recipe
+      let recipeDiv = $(".result-display").css({ "text-align": "center" });
 
-      let recipeDiv = $(".result-display");
+      let sortForm = $("<form>").text("Sort by: ");
+      let sortSelect = $("<select>").addClass("sort-by").css("width", "220px");
+      recipeDiv.append(sortForm);
+      sortForm.append(sortSelect);
 
-      for (i = 0; i < res.results.length; i++) {
+      let sortHighApprove = $("<option>").attr("value", "highest-approve").text("Highest Approval %");
+      let sortLowApprove = $("<option>").attr("value", "lowest-approve").text("Lowest Approval %");
+      let sortHighPositive = $("<option>").attr("value", "most-positive").text("Most Positive Reviews");
+      let sortHighNegative = $("<option>").attr("value", "most-negative").text("Most Negative Reviews");
 
-        // variable for response.results
-        let recipe = res.results[i];
+      sortSelect.append(sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
 
-        // condition because api call is inconsistent
-        if (recipe.instructions) {
+      let dropDown = $(".sort-by").val();
 
-          // create card for each recipe
-          let recipeCard = $("<div>").addClass("card");
-          recipeDiv.append(recipeCard);
+      if (dropDown === "highest-approve") {
+        res.results.sort(function(a, b){return parseFloat(b.user_ratings.score)-parseFloat(a.user_ratings.score)});
+      }
+      else if (dropDown === "lowest-approve") {
+        res.results.sort(function(a, b){return parseFloat(a.user_ratings.score)-parseFloat(b.user_ratings.score)});
+      }
+      else if (dropDown === "most-positive") {
+        res.results.sort(function(a, b){return parseFloat(b.user_count-positive)-parseFloat(a.user_ratings.count-positive)});
+      }
+      else if (dropDown === "most-negative") {
+        res.results.sort(function(a, b){return parseFloat(b.user_ratings.count-negative)-parseFloat(a.user_ratings.count-negative)});
+      }
 
-          // name 
+      // Gatekeeper in case there are no results
+      if (res.results.length > 0) {
 
-          let recipeName = $("<h3>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
+        for (i = 0; i < res.results.length; i++) {
 
-          recipeCard.append(recipeName);
+          // variable for response.results
+          let recipe = res.results[i];
 
-          // user rating
-          let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
-          recipeCard.append(recipeRating);
+          // condition because api call is inconsistent
+          if (recipe.instructions) {
 
-          $(".recipe-name").click(function (e) {
+            // Create card for each recipe
+            let recipeCard = $("<div>").addClass("card").css({ "width": '60%', "display": "inline-block" });
+            let recipeDivider = $("<div>").addClass("card-divider");
+            let recipeSection = $("<div>").addClass("card-section");
+            
+            // Name
+            let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
+            
+            // Recipe image
+            let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"margin-top":"20px","width":"300","height":"200"});
+            recipeCard.append(recipeImage);
 
-            e.preventDefault();
-            let recipeID = $(this).attr("data-id");
+            // User rating
+            let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative; " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+            
+            recipeDiv.append(recipeCard);
+            recipeDivider.append(recipeName);
+            recipeSection.append(recipeRating);
 
-            if (recipe.id == recipeID) {
+            recipeCard.append(recipeDivider, recipeImage, recipeSection);
+            
+            $(".recipe-name").click(function(e) {
 
-              resultModalContent.empty();
+              e.preventDefault();
+              let recipeID = $(this).attr("data-id");
 
-              let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "width": "300", "height": "200" });
-              let recipeName = $("<h3>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
-              let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+              if (recipe.id == recipeID) {
 
-              resultModalContent.append(recipeImage, recipeName, recipeRating);
+                resultModalContent.empty();
 
-              // Video Link if it exists
-              if (recipe.original_video_url) {
-                let recipeVideo = $("<p>").text("Video: ").append($("<a>").attr({ "href": recipe.original_video_url, "target": "_blank" }).text(recipe.original_video_url));
-                resultModalContent.append(recipeVideo);
-              }
+                let recipeCard = $("<div>").addClass("card");
+                let recipeDivider = $("<div>").addClass("card-divider");
+                let recipeSection = $("<div>").addClass("card-section");
+
+                let recipeName = $("<h4>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
+                let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"margin-top":"20px","width":"300","height":"200"});
+                let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+                
+                resultModalContent.append(recipeCard);
+                recipeCard.append(recipeDivider, recipeImage, recipeSection);
+                recipeDivider.append(recipeName);
+                recipeSection.append(recipeRating);
+
+                // Video Link if it exists
+                if (recipe.original_video_url) {
+                  let recipeVideo = $("<p>").html("<strong>Video:</strong> ").append($("<a>").attr({"href": recipe.original_video_url, "target": "_blank"}).text(recipe.original_video_url));
+                  recipeSection.append(recipeVideo);
+                }
 
               // Ingredients
               recipeSection.append($("<h4>").text("Ingredients:"));
@@ -99,14 +142,18 @@ $(document).ready(function () {
             }
 
             modalResult.foundation('open');
+              
           });
 
         }
 
+        }
+
+      else {}
 
       }
       storeSearches(searchVal, 'make', queryURL);
-
+      
     });
 
   }
