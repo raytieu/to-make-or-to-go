@@ -34,6 +34,33 @@ $(document).ready(function () {
 
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
 
+      let sortForm = $("<form>").text("Sort by: ");
+      let sortSelect = $("<select>").addClass("sort-by").css("width", "220px");
+      recipeDiv.append(sortForm);
+      sortForm.append(sortSelect);
+
+      let sortHighApprove = $("<option>").attr("value", "highest-approve").text("Highest Approval %");
+      let sortLowApprove = $("<option>").attr("value", "lowest-approve").text("Lowest Approval %");
+      let sortHighPositive = $("<option>").attr("value", "most-positive").text("Most Positive Reviews");
+      let sortHighNegative = $("<option>").attr("value", "most-negative").text("Most Negative Reviews");
+
+      sortSelect.append(sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
+
+      let dropDown = $(".sort-by").val();
+
+      if (dropDown === "highest-approve") {
+        res.results.sort(function(a, b){return parseFloat(b.user_ratings.score)-parseFloat(a.user_ratings.score)});
+      }
+      else if (dropDown === "lowest-approve") {
+        res.results.sort(function(a, b){return parseFloat(a.user_ratings.score)-parseFloat(b.user_ratings.score)});
+      }
+      else if (dropDown === "most-positive") {
+        res.results.sort(function(a, b){return parseFloat(b.user_count-positive)-parseFloat(a.user_ratings.count-positive)});
+      }
+      else if (dropDown === "most-negative") {
+        res.results.sort(function(a, b){return parseFloat(b.user_ratings.count-negative)-parseFloat(a.user_ratings.count-negative)});
+      }
+
       // Gatekeeper in case there are no results
       if (res.results.length > 0) {
 
@@ -47,14 +74,14 @@ $(document).ready(function () {
 
             // Create card for each recipe
             let recipeCard = $("<div>").addClass("card").css({ "width": '60%', "display": "inline-block" });
-            let recipeDivider = $("<div>").addClass("card-divider").css({ "text-align": "center" });
+            let recipeDivider = $("<div>").addClass("card-divider");
             let recipeSection = $("<div>").addClass("card-section");
             
             // Name
             let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
             
             // Recipe image
-            let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
+            let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"margin-top":"20px","width":"300","height":"200"});
             recipeCard.append(recipeImage);
 
             // User rating
@@ -80,7 +107,7 @@ $(document).ready(function () {
                 let recipeSection = $("<div>").addClass("card-section");
 
                 let recipeName = $("<h4>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
-                let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
+                let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"margin-top":"20px","width":"300","height":"200"});
                 let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
                 
                 resultModalContent.append(recipeCard);
@@ -119,7 +146,8 @@ $(document).ready(function () {
           }
 
         }
-      }
+        }
+
       else {}
 
     });
