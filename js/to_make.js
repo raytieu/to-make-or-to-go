@@ -80,15 +80,15 @@ $(document).ready(function () {
                 resultModalContent.append(recipeVideo);
               }
 
-                // Ingredients
-                recipeSection.append($("<h4>").text("Ingredients:"));
-                let ingredientList = $("<ul>");
-                recipeSection.append(ingredientList);
-                for (j = 0; j < recipe.sections.length; j++) {
-                  for (k = 0; k < recipe.sections[j].components.length; k++) {
-                    ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
-                  }
+              // Ingredients
+              recipeSection.append($("<h4>").text("Ingredients:"));
+              let ingredientList = $("<ul>");
+              recipeSection.append(ingredientList);
+              for (j = 0; j < recipe.sections.length; j++) {
+                for (k = 0; k < recipe.sections[j].components.length; k++) {
+                  ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
                 }
+              }
 
               // Instructions of Recipe
               resultModalContent.append($("<h4>").text("Instructions:"));
@@ -98,12 +98,12 @@ $(document).ready(function () {
 
             }
 
-              modalResult.foundation('open');
-            });
-
-          }
+            modalResult.foundation('open');
+          });
 
         }
+
+
       }
       storeSearches(searchVal, 'make', queryURL);
 
