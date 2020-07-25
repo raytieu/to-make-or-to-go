@@ -32,21 +32,14 @@ $(document).ready(function () {
     }).then(function (res) {
       console.log(res);
 
-      // res.results.sort(function(a, b){return b.user_ratings-a.user_ratings});
-
       // create div for each recipe
-      let recipeDiv = $(".result-display");
-      let recipeDetail = $("<div>");
-      $(".row").append(recipeDetail);
-
+      let recipeDiv = $("<div>");
+      $(".result-display").append(recipeDiv);
 
       for (i = 0; i < res.results.length; i++) {
 
         // variable for response.results
         let recipe = res.results[i];
-
-        
-        // condition because api call is inconsistent
 
         if (recipe.instructions) {
 
@@ -54,54 +47,33 @@ $(document).ready(function () {
           let recipeCard = $("<div>").addClass("card");
           recipeDiv.append(recipeCard);
 
-          // recipe image
-          let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
-          recipeCard.append(recipeImage);
-
           // name 
-          let recipeName = $("<h3>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
+          let recipeName = $("<p>").text("Recipe Name: " + recipe.name);
           recipeCard.append(recipeName);
 
           // user rating
           let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
           recipeCard.append(recipeRating);
 
+          // recipe image
+          let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "width": "300", "height": "200" });
+          recipeCard.append(recipeImage);
+
+          // ingredient
+          for (j = 0; j < recipe.sections.length; j++) {
+            for (k = 0; k < recipe.sections[j].components.length; k++) {
+              recipeCard.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+            }
+          }
+
+          // instructions
+          for (x = 0; x < recipe.instructions.length; x++) {
+            recipeCard.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
+          }
+
           // recipe video
           // let recipeVideo = $("<video>").attr("src", recipe.original_video_url).attr("width", 300).attr("height", 200);
 
-          $(".recipe-name").click(function() {
-
-            let recipeID = $(this).attr("data-id");
-
-            if (recipe.id == recipeID) {
-
-              let recipeName = $("<h3>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
-
-              let recipeRating = $("<p>").text("User Ratings: " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
-              
-              let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({"width":"300","height":"200"});
-
-              recipeDetail.append(recipeImage).append(recipeName).append(recipeRating);
-
-              // ingredient
-              recipeDetail.append($("<h4>").text("Ingredients:"));
-              let ingredientList = $("<ul>");
-              recipeDetail.append(ingredientList);
-              for (j = 0; j < recipe.sections.length; j++) {
-                for (k = 0; k < recipe.sections[j].components.length; k++) {
-                  ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
-                }
-              }
-
-              // instructions
-              recipeDetail.append($("<h4>").text("Instructions:"));
-              for (x = 0; x < recipe.instructions.length; x++) {
-                  recipeDetail.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
-              }
-
-            }
-
-          });
 
         }
 
@@ -110,6 +82,7 @@ $(document).ready(function () {
     });
 
   }
+
 
 
   function yelpCaller(searchVal, location) {
@@ -132,12 +105,17 @@ $(document).ready(function () {
           resultDisplay.append(
             $(`<div></div>`).html(
               //Adding data id and data type for checking
-              `<h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+              //Encasing the output to a card
+              `<div class="card-divider" style="margin-bottom:5px;">
+                <h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+              </div>
+              <img src="${business.image_url}" alt="${business.name}" style="width:300px;height:200px"/>
+              <div class="card-section">
               <p>${address[0]}, ${address[1]}</p>
               <p>${business.phone}</p>
-              <img src="${business.image_url}" alt="${business.name}" style="width:300px;height:200px"/>
-            `)
-          );
+              </div>
+            `).addClass("card").css({ "width": '60%', "display": "inline-block" })
+          ).css({ "text-align": "center" });
         }
       } else {
 
@@ -146,16 +124,16 @@ $(document).ready(function () {
   }
 
   //Attached a listener to result-display class to check if were clicking the button to show modal and parse our data
-  resultDisplay.on("click", function (e) {
+  resultDisplay.on("click", ".result-btn", function (e) {
     e.preventDefault()
-    let target = $(e.target)
+    // let target = $(e.target)
     //Check if button has result-btn class
-    if (target.hasClass("result-btn")) {
-      let type = target.attr("data-type");
-      let id = target.attr("data-id");
-      resultParser(id, type)
-      modalResult.foundation('open');
-    }
+    // if (target.hasClass("result-btn")) {
+    let type = $(this).attr("data-type");
+    let id = $(this).attr("data-id");
+    resultParser(id, type)
+    modalResult.foundation('open');
+    // }
   });
 
   function resultParser(id, type) {
