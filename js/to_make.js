@@ -23,7 +23,7 @@ $(document).ready(function () {
 
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
-    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
+    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey1}&from=0&sizes=10&q=${searchVal}`;
 
     // console.log(queryURL)
 
@@ -32,50 +32,72 @@ $(document).ready(function () {
       method: "GET"
     }).then(function (res) {
 
+      for (let i = 0; i < res.results.length; i++) {
+
+        if (!res.results[i].user_ratings) {
+          res.results.splice(i, 1);
+        }  
+
+        if (res.results[i].user_ratings.score === null) {
+          res.results[i].user_ratings.score = 0;
+        }
+
+      }
+
+      console.log(res.results[0].user_ratings.score);
+
       console.log(res);
 
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
+      let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
 
       let sortForm = $("<form>").text("Sort by: ");
       let sortSelect = $("<select>").addClass("sort-by").css("width", "220px");
-      recipeDiv.append(sortForm);
+      recipeForm.append(sortForm);
       sortForm.append(sortSelect);
 
+      let sortDefault = $("<option>");
       let sortHighApprove = $("<option>").attr("value", "highest-approve").text("Highest Approval %");
       let sortLowApprove = $("<option>").attr("value", "lowest-approve").text("Lowest Approval %");
       let sortHighPositive = $("<option>").attr("value", "most-positive").text("Most Positive Reviews");
       let sortHighNegative = $("<option>").attr("value", "most-negative").text("Most Negative Reviews");
 
-      sortSelect.append(sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
-
-      let dropDown = $(".sort-by").val();
+      sortSelect.append(sortDefault, sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
 
       // Gatekeeper in case there are no results
       if (res.results.length > 0) {
-
+      
         renderDataMake();
         
-        $(".sort-by").change(function() {
-          if (dropDown == "highest-approve") {
+        sortSelect.change(function() {
+        
+          let dropDown = sortSelect.val();
+
+          if (dropDown === "highest-approve") {
+            recipeDiv.empty();
             res.results.sort(function (a, b) { return parseFloat(b.user_ratings.score) - parseFloat(a.user_ratings.score) });
             renderDataMake();
           }
-          else if (dropDown == "lowest-approve") {
+          else if (dropDown === "lowest-approve") {
+            recipeDiv.empty();
             res.results.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
             renderDataMake();
           }
-          else if (dropDown == "most-positive") {
-            res.results.sort(function (a, b) { return parseFloat(b.user_count - positive) - parseFloat(a.user_ratings.count - positive) });
+          else if (dropDown === "most-positive") {
+            recipeDiv.empty();
+            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count_positive) - parseFloat(a.user_ratings.count_positive) });
             renderDataMake();
           }
-          else if (dropDown == "most-negative") {
-            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count - negative) - parseFloat(a.user_ratings.count - negative) });
+          else if (dropDown === "most-negative") {
+            recipeDiv.empty();
+            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count_negative) - parseFloat(a.user_ratings.count_negative) });
             renderDataMake();
           }
+
         });
 
         function renderDataMake() {
-          for (i = 0; i < res.results.length; i++) {
+          for (let i = 0; i < res.results.length; i++) {
 
             // variable for response.results
             let recipe = res.results[i];
@@ -136,15 +158,15 @@ $(document).ready(function () {
                   recipeSection.append($("<h4>").text("Ingredients:"));
                   let ingredientList = $("<ul>");
                   recipeSection.append(ingredientList);
-                  for (j = 0; j < recipe.sections.length; j++) {
-                    for (k = 0; k < recipe.sections[j].components.length; k++) {
+                  for (let j = 0; j < recipe.sections.length; j++) {
+                    for (let k = 0; k < recipe.sections[j].components.length; k++) {
                       ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
                     }
                   }
 
                   // Instructions of Recipe
                   resultModalContent.append($("<h4>").text("Instructions:"));
-                  for (x = 0; x < recipe.instructions.length; x++) {
+                  for (let x = 0; x < recipe.instructions.length; x++) {
                     resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
                   }
 
