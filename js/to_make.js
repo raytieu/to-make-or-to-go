@@ -36,15 +36,41 @@ $(document).ready(function () {
 
       for (let i = 0; i < res.results.length; i++) {
 
-        if (!res.results[i].user_ratings) {
+        if (res.results[i].recipes) {
           res.results.splice(i, 1);
-        }  
+        }
+
+        if (res.results[i].recipes) {
+          res.results.splice(i, 1);
+        }
+
+        if (res.results[i].recipes) {
+          res.results.splice(i, 1);
+        }
+
+        if (res.results[i].recipes) {
+          res.results.splice(i, 1);
+        }
+
+        if (res.results[i].recipes) {
+          res.results.splice(i, 1);
+        }
+
+        if (res.results[i].recipes) {
+          res.results.splice(i, 1);
+        }
+
+        if (res.results[i].recipes) {
+          res.results.splice(i, 1);
+        }
 
         if (res.results[i].user_ratings && res.results[i].user_ratings.score === null) {
           res.results[i].user_ratings.score = 0;
         }
 
       }
+
+      console.log(res.results);
 
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
       let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
