@@ -17,7 +17,7 @@ img {
     clear: both;
     font-size: 15px;
     text-align: center;
-    padding: 25px 0;
+    padding: 15px 0;
     margin-top: -90px;
     border-top: 8px solid #7faf5a;
     background: #ccdecc;
@@ -37,4 +37,20 @@ img {
   position: absolute;
   left: 5px;
   bottom: 10px;
+}
+.result-modal-content{
+  background-color: rgb(226, 210, 145);
+  margin: auto;
+}
+.card{
+  background-color: #7faf5a;
+}
+#search-modal.reveal{
+  background-color: #7faf5a;
+}
+.card-divider{
+  background-color: #ccdecc;
+}
+.recipe-name{
+  text-align: center;
 }
