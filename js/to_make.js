@@ -36,7 +36,7 @@ $(document).ready(function () {
 
         if (!res.results[i].user_ratings) {
           res.results.splice(i, 1);
-        }  
+        }
 
         if (res.results[i].user_ratings.score === null) {
           res.results[i].user_ratings.score = 0;
@@ -66,11 +66,11 @@ $(document).ready(function () {
 
       // Gatekeeper in case there are no results
       if (res.results.length > 0) {
-      
+
         renderDataMake();
-        
-        sortSelect.change(function() {
-        
+
+        sortSelect.change(function () {
+
           let dropDown = sortSelect.val();
 
           if (dropDown === "highest-approve") {
@@ -206,25 +206,41 @@ $(document).ready(function () {
       let businesses = res.businesses;
       // console.log(res)
       if (businesses.length > 0) {
+        //Adding a dropdown to dropdown-sort
+        let dropDown = $(".dropdown-sort").css({ "text-align": "center" });
+        dropDown.html(`
+          <form >Sort By:
+          <select name="sort-to-go" class="sort-to-go" style="width:220px;">
+            <option value="default" selected>Default</option>
+            <option value="high-rating">Highest Rating</option>
+            <option value="low-rating">Lowest Rating</option>
+            <option value="high-review">Highest Reviews</option>
+            <option value="low-review">Lowest Reviews</option>
+          </select>
+          </form>
+        `);
 
         for (business of businesses) {
           let address = business.location.display_address;
+          // const { location: { display_address: { address } } } = business;
+          // console.log(business)
           resultDisplay.append(
-            $(`<div></div>`).html(
+            $(`<div ></div>`).html(
               //Adding data id and data type for checking
               //Encasing the output to a card
               `<div class="card-divider" style="margin-bottom:5px;">
-                <h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+                <h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a></h5>
               </div>
               <img src="${business.image_url}" alt="${business.name}" style="width:300px;height:200px"/>
               <div class="card-section">
               <p>${address[0]}, ${address[1]}</p>
               <p>${business.phone}</p>
               </div>
-            `).addClass("card").css({ "width": '60%', "display": "inline-block" })
+            `).addClass("card go-card").css({ "width": '60%', "display": "inline-block" }).attr({ "data-rating": business.rating, "data-review": business.review_count })
           ).css({ "text-align": "center" });
         }
         storeSearches([searchVal, location], 'go', queryUrl);
+
       } else {
         resultDisplay.html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
                               <h5>No Results Found!</h5>
@@ -243,11 +259,44 @@ $(document).ready(function () {
     }
   });
 
-  // function resultParser(id, type) {
-  //   if (type === "to-go") {
+  //On change of the dropdown
+  $(".dropdown-sort").on("change", ".sort-to-go", function (e) {
+    let changeVal = $(this).val();
+    console.log("changed")
+    //Find all the div inside the result display
+    let divCards = resultDisplay.find(".go-card");
+    if (changeVal === "high-rating") {
+      divCards.sort(function (a, b) {
+        let cardARating = parseFloat($(a).attr("data-rating"));
+        let cardBRating = parseFloat($(b).attr("data-rating"));
+        return cardBRating - cardARating;
+      });
+      resultDisplay.html(divCards)
+    } else if (changeVal === "low-rating") {
+      divCards.sort(function (a, b) {
+        let cardARating = parseFloat($(a).attr("data-rating"));
+        let cardBRating = parseFloat($(b).attr("data-rating"));
+        return cardARating - cardBRating;
+      });
+      resultDisplay.html(divCards)
+    } else if (changeVal === "high-review") {
+      divCards.sort(function (a, b) {
+        let cardAReview = parseFloat($(a).attr("data-review"));
+        let cardBReview = parseFloat($(b).attr("data-review"));
+        return cardBReview - cardAReview;
+      });
+      resultDisplay.html(divCards)
+    } else if (changeVal === "low-review") {
+      divCards.sort(function (a, b) {
+        let cardAReview = parseFloat($(a).attr("data-review"));
+        let cardBReview = parseFloat($(b).attr("data-review"));
+        return cardAReview - cardBReview;
+      });
+      resultDisplay.html(divCards)
+    } else {
 
-  //   }
-  // }
+    }
+  });
 
   function yelpResultCaller(id) {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}`;
@@ -291,9 +340,11 @@ $(document).ready(function () {
   function storeSearches(search, type, url) {
     // console.log(search[0] ? search[0] : search)
     let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
+    const searchVal = Array.isArray(search) ? search[0] : search;
+    const locationVal = Array.isArray(search) ? search[1] : '';
     const searchObjInit = {
-      search: Array.isArray(search) ? search[0] : search,
-      location: Array.isArray(search) ? search[1] : '',
+      search: searchVal,
+      location: locationVal,
       url: url,
       type: type,
     };
@@ -302,12 +353,17 @@ $(document).ready(function () {
       storedSearches = [];
       storedSearches.push(searchObjInit);
     } else {
-      let searchObj = storedSearches.find(element => element.url === url);
+      let searchObj = storedSearches.find(element => element.search === searchVal && element.type === type);
+      // console.log(searchObj)
       if (!searchObj) {
         storedSearches.push(searchObjInit);
       }
     }
     localStorage.setItem("toMakeToGo", JSON.stringify(storedSearches));
   }
+
+  // function isExisting(search) {
+  //   return search.search === search && search.type === type
+  // }
 
 });
