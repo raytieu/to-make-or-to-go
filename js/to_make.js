@@ -32,21 +32,19 @@ $(document).ready(function () {
       method: "GET"
     }).then(function (res) {
 
+      console.log(res);
+
       for (let i = 0; i < res.results.length; i++) {
 
         if (!res.results[i].user_ratings) {
           res.results.splice(i, 1);
         }  
 
-        if (res.results[i].user_ratings.score === null) {
+        if (res.results[i].user_ratings && res.results[i].user_ratings.score === null) {
           res.results[i].user_ratings.score = 0;
         }
 
       }
-
-      console.log(res.results[0].user_ratings.score);
-
-      console.log(res);
 
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
       let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
