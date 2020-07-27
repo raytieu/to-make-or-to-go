@@ -166,3 +166,21 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+.tryabout::after {
+  content: "";
+  background: url(../../to-make-or-to-go/asset/food.jpg);
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+@media screen and (max-width: 1750px){
+    .tryabout{
+        padding: 5vw;
+    }
+}
