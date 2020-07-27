@@ -50,100 +50,111 @@ $(document).ready(function () {
 
       let dropDown = $(".sort-by").val();
 
-      if (dropDown === "highest-approve") {
-        res.results.sort(function (a, b) { return parseFloat(b.user_ratings.score) - parseFloat(a.user_ratings.score) });
-      }
-      else if (dropDown === "lowest-approve") {
-        res.results.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
-      }
-      else if (dropDown === "most-positive") {
-        res.results.sort(function (a, b) { return parseFloat(b.user_count - positive) - parseFloat(a.user_ratings.count - positive) });
-      }
-      else if (dropDown === "most-negative") {
-        res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count - negative) - parseFloat(a.user_ratings.count - negative) });
-      }
-
       // Gatekeeper in case there are no results
       if (res.results.length > 0) {
 
-        for (i = 0; i < res.results.length; i++) {
+        renderDataMake();
+        
+        $(".sort-by").change(function() {
+          if (dropDown == "highest-approve") {
+            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.score) - parseFloat(a.user_ratings.score) });
+            renderDataMake();
+          }
+          else if (dropDown == "lowest-approve") {
+            res.results.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
+            renderDataMake();
+          }
+          else if (dropDown == "most-positive") {
+            res.results.sort(function (a, b) { return parseFloat(b.user_count - positive) - parseFloat(a.user_ratings.count - positive) });
+            renderDataMake();
+          }
+          else if (dropDown == "most-negative") {
+            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count - negative) - parseFloat(a.user_ratings.count - negative) });
+            renderDataMake();
+          }
+        });
 
-          // variable for response.results
-          let recipe = res.results[i];
+        function renderDataMake() {
+          for (i = 0; i < res.results.length; i++) {
 
-          // condition because api call is inconsistent
-          if (recipe.instructions) {
+            // variable for response.results
+            let recipe = res.results[i];
 
-            // Create card for each recipe
-            let recipeCard = $("<div>").addClass("card").css({ "width": '60%', "display": "inline-block" });
-            let recipeDivider = $("<div>").addClass("card-divider");
-            let recipeSection = $("<div>").addClass("card-section");
+            // condition because api call is inconsistent
+            if (recipe.instructions) {
 
-            // Name
-            let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
+              // Create card for each recipe
+              let recipeCard = $("<div>").addClass("card").css({ "width": '60%', "display": "inline-block" });
+              let recipeDivider = $("<div>").addClass("card-divider");
+              let recipeSection = $("<div>").addClass("card-section");
 
-            // Recipe image
-            let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
-            recipeCard.append(recipeImage);
+              // Name
+              let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
 
-            // User rating
-            let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative; " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+              // Recipe image
+              let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
+              recipeCard.append(recipeImage);
 
-            recipeDiv.append(recipeCard);
-            recipeDivider.append(recipeName);
-            recipeSection.append(recipeRating);
+              // User rating
+              let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative; " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
 
-            recipeCard.append(recipeDivider, recipeImage, recipeSection);
+              recipeDiv.append(recipeCard);
+              recipeDivider.append(recipeName);
+              recipeSection.append(recipeRating);
 
-            $(".recipe-name").click(function (e) {
+              recipeCard.append(recipeDivider, recipeImage, recipeSection);
 
-              e.preventDefault();
-              let recipeID = $(this).attr("data-id");
+              $(".recipe-name").click(function (e) {
 
-              if (recipe.id == recipeID) {
+                e.preventDefault();
+                let recipeID = $(this).attr("data-id");
 
-                resultModalContent.empty();
+                if (recipe.id == recipeID) {
 
-                let recipeCard = $("<div>").addClass("card");
-                let recipeDivider = $("<div>").addClass("card-divider");
-                let recipeSection = $("<div>").addClass("card-section");
+                  resultModalContent.empty();
 
-                let recipeName = $("<h4>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
-                let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
-                let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+                  let recipeCard = $("<div>").addClass("card");
+                  let recipeDivider = $("<div>").addClass("card-divider");
+                  let recipeSection = $("<div>").addClass("card-section");
 
-                resultModalContent.append(recipeCard);
-                recipeCard.append(recipeDivider, recipeImage, recipeSection);
-                recipeDivider.append(recipeName);
-                recipeSection.append(recipeRating);
+                  let recipeName = $("<h4>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
+                  let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
+                  let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
 
-                // Video Link if it exists
-                if (recipe.original_video_url) {
-                  let recipeVideo = $("<p>").html("<strong>Video:</strong> ").append($("<a>").attr({ "href": recipe.original_video_url, "target": "_blank" }).text(recipe.original_video_url));
-                  recipeSection.append(recipeVideo);
-                }
+                  resultModalContent.append(recipeCard);
+                  recipeCard.append(recipeDivider, recipeImage, recipeSection);
+                  recipeDivider.append(recipeName);
+                  recipeSection.append(recipeRating);
 
-                // Ingredients
-                recipeSection.append($("<h4>").text("Ingredients:"));
-                let ingredientList = $("<ul>");
-                recipeSection.append(ingredientList);
-                for (j = 0; j < recipe.sections.length; j++) {
-                  for (k = 0; k < recipe.sections[j].components.length; k++) {
-                    ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+                  // Video Link if it exists
+                  if (recipe.original_video_url) {
+                    let recipeVideo = $("<p>").html("<strong>Video:</strong> ").append($("<a>").attr({ "href": recipe.original_video_url, "target": "_blank" }).text(recipe.original_video_url));
+                    recipeSection.append(recipeVideo);
                   }
+
+                  // Ingredients
+                  recipeSection.append($("<h4>").text("Ingredients:"));
+                  let ingredientList = $("<ul>");
+                  recipeSection.append(ingredientList);
+                  for (j = 0; j < recipe.sections.length; j++) {
+                    for (k = 0; k < recipe.sections[j].components.length; k++) {
+                      ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+                    }
+                  }
+
+                  // Instructions of Recipe
+                  resultModalContent.append($("<h4>").text("Instructions:"));
+                  for (x = 0; x < recipe.instructions.length; x++) {
+                    resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
+                  }
+
                 }
 
-                // Instructions of Recipe
-                resultModalContent.append($("<h4>").text("Instructions:"));
-                for (x = 0; x < recipe.instructions.length; x++) {
-                  resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
-                }
+                modalResult.foundation('open');
 
-              }
+              });
 
-              modalResult.foundation('open');
-
-            });
+            }
 
           }
 
