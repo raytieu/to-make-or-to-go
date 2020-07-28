@@ -169,21 +169,47 @@ footer {
     width: 100%;
 }
 
-.tryabout::after {
-    content: "";
-    background: url(../../to-make-or-to-go/asset/food.jpg);
-    opacity: 0.5;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    position: absolute;
-    z-index: -1;
+.tryabout{
+    width: 95%;
+    height:50%;
+    position: relative;
+    padding: 10vw;
 }
 
-@media screen and (max-width: 1750px) {
-    .tryabout {
+.tryabout::after {
+  content: "";
+  background: url(../../to-make-or-to-go/asset/food.jpg);
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+  background-position: center center;
+  background-repeat: no-repeat;
+}
 
+.about-p{
+    font-size:1.3rem;
+    color: blue;
+}
+
+.about-p p mark{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.about-container{
+    justify-content: center;
+    align-items: center;
+    /* text-align: center; */
+    display: flex;
+}
+
+
+@media screen and (max-width: 1750px){
+    .tryabout{
         padding: 5vw;
     }
 }
