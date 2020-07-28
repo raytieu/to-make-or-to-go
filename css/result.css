@@ -35,9 +35,9 @@ footer {
 }
 
 #btn-backToHomepage {
-  position: absolute;
+  position: relative;
   left: 5px;
-  bottom: 10px;
+  bottom: 0px;
 }
 .result-modal-content{
   background-color: rgb(226, 210, 145);
@@ -45,13 +45,14 @@ footer {
 }
 .card{
   background-color:  #ccdecc;
+  border-radius: 10px;
 }
 #search-modal.reveal{
   background-color: #7faf5a;
+  border-radius: 10px;
 }
 .card-divider{
   background-color: #6ace1d;
-  border-radius: 10px;
 }
 .recipe-name{
   text-align: center;

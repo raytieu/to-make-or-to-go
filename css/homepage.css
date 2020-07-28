@@ -31,6 +31,9 @@ a {
     -ms-border-radius: 100px;
     -o-border-radius: 100px;
 }
+.active{
+    text-align: center;
+}
 
 /* Change the background color on mouse-over */
 
