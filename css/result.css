@@ -6,7 +6,8 @@ body {
     margin-bottom: 10px;
 }
 img {
-    display: block;
+    align: center;
+    display: center;
     margin: 0 auto;
     width: auto;
     height: auto;
@@ -28,6 +29,12 @@ footer {
     bottom: 0;
     width: 100%;
 
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button {
