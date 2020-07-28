@@ -50,7 +50,8 @@ footer {
   background-color: #7faf5a;
 }
 .card-divider{
-  background-color: #7faf5a;
+  background-color: #6ace1d;
+  border-radius: 10px;
 }
 .recipe-name{
   text-align: center;
