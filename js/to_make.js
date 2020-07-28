@@ -32,20 +32,22 @@ $(document).ready(function () {
       method: "GET"
     }).then(function (res) {
 
-      console.log(res);
-
+      // Filter out inconsistencies from results, for sort feature
       let filteredResults = res.results.filter(function(result) {
         return result.user_ratings;
       });
 
+      // Assign a value of 0, if user_rating.score is null, for sort feature
       for (let i = 0; i < filteredResults.length; i++) {
         if (filteredResults[i].user_ratings && filteredResults[i].user_ratings.score === null) {
           filteredResults[i].user_ratings.score = 0;
         }
       }
 
+      // Div to append all the search results
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
       
+      // Add Dropdown menu to sort the search results
       let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
       let sortForm = $("<form>").text("Sort by: ");
       let sortSelect = $("<select>").addClass("sort-by").css("width", "220px");
@@ -59,13 +61,11 @@ $(document).ready(function () {
       let sortHighNegative = $("<option>").attr("value", "least-reviews").text("Least Reviews");
       sortSelect.append(sortDefault, sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
 
-      
-
-      // Gatekeeper in case there are no results
+      // Gatekeeper to render if search results exist
       if (filteredResults.length > 0) {
-
         renderDataMake();
 
+        // Function that re-populates search results upon change in Dropdown option
         sortSelect.change(function () {
 
           let dropDown = sortSelect.val();
@@ -93,13 +93,16 @@ $(document).ready(function () {
 
         });
 
+        // Fill Recipe Div section with search result cards
         function renderDataMake() {
+
+          // For-loop to append data from each object in array
           for (let i = 0; i < filteredResults.length; i++) {
 
-            // variable for response.results
+            // Variable for looping through filteredResults array
             let recipe = filteredResults[i];
 
-            // condition because api call is inconsistent
+            // Condition because API call is inconsistent
             if (recipe.instructions) {
 
               // Create card for each recipe
@@ -107,7 +110,7 @@ $(document).ready(function () {
               let recipeDivider = $("<div>").addClass("card-divider");
               let recipeSection = $("<div>").addClass("card-section");
 
-              // Name
+              // Recipe Name
               let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
 
               // Recipe image
@@ -123,6 +126,7 @@ $(document).ready(function () {
 
               recipeCard.append(recipeDivider, recipeImage, recipeSection);
 
+              // Click function to open modal and append target data 
               $(".recipe-name").click(function (e) {
 
                 e.preventDefault();
@@ -145,13 +149,13 @@ $(document).ready(function () {
                   recipeDivider.append(recipeName);
                   recipeSection.append(recipeRating);
 
-                  // Video Link if it exists
+                  // Append video link if it exists
                   if (recipe.original_video_url) {
                     let recipeVideo = $("<p>").html("<strong>Video:</strong> ").append($("<a>").attr({ "href": recipe.original_video_url, "target": "_blank" }).text(recipe.original_video_url));
                     recipeSection.append(recipeVideo);
                   }
 
-                  // Ingredients
+                  // Recipe Ingredients
                   recipeSection.append($("<h4>").text("Ingredients:"));
                   let ingredientList = $("<ul>");
                   recipeSection.append(ingredientList);
@@ -161,7 +165,7 @@ $(document).ready(function () {
                     }
                   }
 
-                  // Instructions of Recipe
+                  // Recipe Instructions
                   recipeSection.append($("<h4>").text("Instructions:"));
                   for (let x = 0; x < recipe.instructions.length; x++) {
                     recipeSection.append($("<p>").html("<strong>" + recipe.instructions[x].position + "</strong>" + ". " + recipe.instructions[x].display_text));
@@ -178,13 +182,15 @@ $(document).ready(function () {
           }
 
         }
-
-      } else {
+      } 
+      // Remove dropdown menu and display callout if no search results
+      else {
         recipeForm.empty();
         resultDisplay.html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
         <h5>No Results Found!</h5></div>`);
       }
 
+      // Store search terms and queryURL into Local Storage
       storeSearches(searchVal, 'make', queryURL);
 
     });
