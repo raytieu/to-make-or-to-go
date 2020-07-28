@@ -35,39 +35,33 @@ $(document).ready(function () {
       console.log(res);
 
       for (let i = 0; i < res.results.length; i++) {
-
-        if (res.results[i].recipes) {
+        if (!res.results[i].user_ratings) {
           res.results.splice(i, 1);
         }
+      }
 
-        if (res.results[i].recipes) {
-          res.results.splice(i, 1);
+      for (let j = 0; j < res.results.length; j++) {
+        if (!res.results[j].user_ratings) {
+          res.results.splice(j, 1);
         }
+      }
 
-        if (res.results[i].recipes) {
-          res.results.splice(i, 1);
+      for (let k = 0; k < res.results.length; k++) {
+        if (res.results[k].recipes) {
+          res.results.splice(k, 1);
         }
+      }
 
-        if (res.results[i].recipes) {
-          res.results.splice(i, 1);
+      for (let l = 0; l < res.results.length; l++) {
+        if (res.results[l].recipes) {
+          res.results.splice(l, 1);
         }
+      }
 
-        if (res.results[i].recipes) {
-          res.results.splice(i, 1);
+      for (let z = 0; z < res.results.length; z++) {
+        if (res.results[z].user_ratings && res.results[z].user_ratings.score === null) {
+          res.results[z].user_ratings.score = 0;
         }
-
-        if (res.results[i].recipes) {
-          res.results.splice(i, 1);
-        }
-
-        if (res.results[i].recipes) {
-          res.results.splice(i, 1);
-        }
-
-        if (res.results[i].user_ratings && res.results[i].user_ratings.score === null) {
-          res.results[i].user_ratings.score = 0;
-        }
-
       }
 
       console.log(res.results);
