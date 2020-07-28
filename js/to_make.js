@@ -23,9 +23,9 @@ $(document).ready(function () {
 
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
+    let apiKey3 = "4a7265ba2bmshe954884435eef14p14dc57jsn70a654005e7a" // Alex's Key
+    let apiKey4 = "9a93dadb97mshe001d742b476bfep136ad9jsna2e0130232fb" // Duyen's Key
     let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey1}&from=0&sizes=10&q=${searchVal}`;
-
-    // console.log(queryURL)
 
     $.ajax({
       url: queryURL,
@@ -34,41 +34,19 @@ $(document).ready(function () {
 
       console.log(res);
 
-      for (let i = 0; i < res.results.length; i++) {
-        if (!res.results[i].user_ratings) {
-          res.results.splice(i, 1);
+      let filteredResults = res.results.filter(function(result) {
+        return result.user_ratings;
+      });
+
+      for (let i = 0; i < filteredResults.length; i++) {
+        if (filteredResults[i].user_ratings && filteredResults[i].user_ratings.score === null) {
+          filteredResults[i].user_ratings.score = 0;
         }
       }
-
-      for (let j = 0; j < res.results.length; j++) {
-        if (!res.results[j].user_ratings) {
-          res.results.splice(j, 1);
-        }
-      }
-
-      for (let k = 0; k < res.results.length; k++) {
-        if (res.results[k].recipes) {
-          res.results.splice(k, 1);
-        }
-      }
-
-      for (let l = 0; l < res.results.length; l++) {
-        if (res.results[l].recipes) {
-          res.results.splice(l, 1);
-        }
-      }
-
-      for (let z = 0; z < res.results.length; z++) {
-        if (res.results[z].user_ratings && res.results[z].user_ratings.score === null) {
-          res.results[z].user_ratings.score = 0;
-        }
-      }
-
-      console.log(res.results);
 
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
+      
       let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
-
       let sortForm = $("<form>").text("Sort by: ");
       let sortSelect = $("<select>").addClass("sort-by").css("width", "220px");
       recipeForm.append(sortForm);
@@ -79,11 +57,10 @@ $(document).ready(function () {
       let sortLowApprove = $("<option>").attr("value", "lowest-approve").text("Lowest Approval %");
       let sortHighPositive = $("<option>").attr("value", "most-positive").text("Most Positive Reviews");
       let sortHighNegative = $("<option>").attr("value", "most-negative").text("Most Negative Reviews");
-
       sortSelect.append(sortDefault, sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
 
       // Gatekeeper in case there are no results
-      if (res.results.length > 0) {
+      if (filteredResults.length > 0) {
 
         renderDataMake();
 
@@ -93,32 +70,32 @@ $(document).ready(function () {
 
           if (dropDown === "highest-approve") {
             recipeDiv.empty();
-            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.score) - parseFloat(a.user_ratings.score) });
+            filteredResults.sort(function (a, b) { return parseFloat(b.user_ratings.score) - parseFloat(a.user_ratings.score) });
             renderDataMake();
           }
           else if (dropDown === "lowest-approve") {
             recipeDiv.empty();
-            res.results.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
+            filteredResults.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
             renderDataMake();
           }
           else if (dropDown === "most-positive") {
             recipeDiv.empty();
-            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count_positive) - parseFloat(a.user_ratings.count_positive) });
+            filteredResults.sort(function (a, b) { return parseFloat(b.user_ratings.count_positive) - parseFloat(a.user_ratings.count_positive) });
             renderDataMake();
           }
           else if (dropDown === "most-negative") {
             recipeDiv.empty();
-            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count_negative) - parseFloat(a.user_ratings.count_negative) });
+            filteredResults.sort(function (a, b) { return parseFloat(b.user_ratings.count_negative) - parseFloat(a.user_ratings.count_negative) });
             renderDataMake();
           }
 
         });
 
         function renderDataMake() {
-          for (let i = 0; i < res.results.length; i++) {
+          for (let i = 0; i < filteredResults.length; i++) {
 
             // variable for response.results
-            let recipe = res.results[i];
+            let recipe = filteredResults[i];
 
             // condition because api call is inconsistent
             if (recipe.instructions) {
@@ -183,9 +160,9 @@ $(document).ready(function () {
                   }
 
                   // Instructions of Recipe
-                  resultModalContent.append($("<h4>").text("Instructions:"));
+                  recipeSection.append($("<h4>").text("Instructions:"));
                   for (let x = 0; x < recipe.instructions.length; x++) {
-                    resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
+                    recipeSection.append($("<p>").html("<strong>" + recipe.instructions[x].position + "</strong>" + ". " + recipe.instructions[x].display_text));
                   }
 
                 }
@@ -200,7 +177,12 @@ $(document).ready(function () {
 
         }
 
-      } else { }
+      } else {
+        recipeForm.empty();
+        resultDisplay.html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
+        <h5>No Results Found!</h5></div>`);
+      }
+
       storeSearches(searchVal, 'make', queryURL);
 
     });
