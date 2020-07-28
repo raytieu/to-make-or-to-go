@@ -12,11 +12,9 @@ body {
     overflow: hidden;
     background-color: #ccdecc;
     padding: 0px 10px
-
 }
 
 /* Style the header links */
-
 
 a {
     font-weight: bold;
@@ -33,7 +31,6 @@ a {
     -ms-border-radius: 100px;
     -o-border-radius: 100px;
 }
-
 
 /* Change the background color on mouse-over */
 
@@ -169,47 +166,68 @@ footer {
     width: 100%;
 }
 
-.tryabout{
+.tryabout {
     width: 95%;
-    height:50%;
+    height: 50%;
     position: relative;
     padding: 10vw;
 }
 
 .tryabout::after {
-  content: "";
-  background: url(../../to-make-or-to-go/asset/food.jpg);
-  opacity: 0.5;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  z-index: -1;   
-  background-position: center center;
-  background-repeat: no-repeat;
+    content: "";
+    background: url(../../to-make-or-to-go/asset/food.jpg);
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
-.about-p{
-    font-size:1.3rem;
+.about-p {
+    font-size: 1.3rem;
     color: blue;
 }
 
-.about-p p mark{
+.about-p p mark {
     font-size: 1.5rem;
     font-weight: bold;
 }
 
-.about-container{
+.about-container {
     justify-content: center;
     align-items: center;
     /* text-align: center; */
     display: flex;
 }
 
-
-@media screen and (max-width: 1750px){
-    .tryabout{
+@media screen and (max-width: 1750px) {
+    .tryabout {
         padding: 5vw;
     }
+}
+
+/*================================================================================*/
+
+/*Foundation*/
+
+.orbit-caption {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 0;
+    padding: 3rem;
+    font-size: 20px;
+    background-color: rgba(10, 10, 10, .5);
+    color: #fefefe;
+}
+
+blockquote, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, li, ol, p, pre, td, th, ul {
+    margin: 0;
+    padding: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
