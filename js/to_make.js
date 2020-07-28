@@ -55,9 +55,11 @@ $(document).ready(function () {
       let sortDefault = $("<option>");
       let sortHighApprove = $("<option>").attr("value", "highest-approve").text("Highest Approval %");
       let sortLowApprove = $("<option>").attr("value", "lowest-approve").text("Lowest Approval %");
-      let sortHighPositive = $("<option>").attr("value", "most-positive").text("Most Positive Reviews");
-      let sortHighNegative = $("<option>").attr("value", "most-negative").text("Most Negative Reviews");
+      let sortHighPositive = $("<option>").attr("value", "most-reviews").text("Most Reviews");
+      let sortHighNegative = $("<option>").attr("value", "least-reviews").text("Least Reviews");
       sortSelect.append(sortDefault, sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
+
+      
 
       // Gatekeeper in case there are no results
       if (filteredResults.length > 0) {
@@ -78,14 +80,14 @@ $(document).ready(function () {
             filteredResults.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
             renderDataMake();
           }
-          else if (dropDown === "most-positive") {
+          else if (dropDown === "most-reviews") {
             recipeDiv.empty();
-            filteredResults.sort(function (a, b) { return parseFloat(b.user_ratings.count_positive) - parseFloat(a.user_ratings.count_positive) });
+            filteredResults.sort(function (a, b) { return parseFloat(b.user_ratings.count_positive + b.user_ratings.count_negative) - parseFloat(a.user_ratings.count_positive + a.user_ratings.count_negative) });
             renderDataMake();
           }
-          else if (dropDown === "most-negative") {
+          else if (dropDown === "least-reviews") {
             recipeDiv.empty();
-            filteredResults.sort(function (a, b) { return parseFloat(b.user_ratings.count_negative) - parseFloat(a.user_ratings.count_negative) });
+            filteredResults.sort(function (a, b) { return parseFloat(a.user_ratings.count_positive + a.user_ratings.count_negative) - parseFloat(b.user_ratings.count_positive + b.user_ratings.count_negative) });
             renderDataMake();
           }
 
