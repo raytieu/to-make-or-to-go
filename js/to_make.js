@@ -235,7 +235,7 @@ $(document).ready(function () {
         dropDown.html(`
           <form >Sort By:
           <select name="sort-to-go" class="sort-to-go" style="width:220px;">
-            <option value="default" selected>Default</option>
+            <option value="default" selected></option>
             <option value="high-rating">Highest Rating</option>
             <option value="low-rating">Lowest Rating</option>
             <option value="high-review">Highest Reviews</option>
@@ -317,8 +317,6 @@ $(document).ready(function () {
         return cardAReview - cardBReview;
       });
       resultDisplay.html(divCards)
-    } else {
-
     }
   });
 

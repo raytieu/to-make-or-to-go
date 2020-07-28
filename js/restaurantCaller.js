@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     if (type === "to make") {
       let searches = retrieveSearches('make');
-      console.log(constructSearches(searches))
+      // console.log(constructSearches(searches))
       searchModalContent.append(
         $(`<h4></h4>`).text("To Make"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Chicken" class="search-input" />`),
@@ -32,7 +32,7 @@ $(document).ready(function () {
       new Foundation.DropdownMenu($('.searches'));
     } else {
       let searches = retrieveSearches('go');
-      console.log(constructSearches(searches))
+      // console.log(constructSearches(searches))
       searchModalContent.append(
         $(`<h4></h4>`).text("To Go"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Fried Chicken" class="search-input" />`),
@@ -50,9 +50,9 @@ $(document).ready(function () {
     if (searches) {
       searches.slice(0, 5).forEach(s => {
         if (s.type === 'make') {
-          li += `<li class='li-search' data-type='make' data-search='${s.search}'><a href="#">${s.search}</a></li>`
+          li += `<li class='li-search' data-type='make' data-search='${s.search}'><a href="#" style="font-size:18px;">${s.search}</a></li>`
         } else {
-          li += `<li class='li-search' data-type='go' data-search='${s.search}' data-location='${s.location}'><a href="#">${s.search} - ${s.location}</a></li>`
+          li += `<li class='li-search' data-type='go' data-search='${s.search}' data-location='${s.location}'><a href="#" style="font-size:18px;">${s.search} - ${s.location}</a></li>`
         }
       });
       return li;
