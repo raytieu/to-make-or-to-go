@@ -12,9 +12,11 @@ body {
     overflow: hidden;
     background-color: #ccdecc;
     padding: 0px 10px
+
 }
 
 /* Style the header links */
+
 
 a {
     font-weight: bold;
@@ -31,6 +33,7 @@ a {
     -ms-border-radius: 100px;
     -o-border-radius: 100px;
 }
+
 
 /* Change the background color on mouse-over */
 
@@ -180,6 +183,7 @@ footer {
 
 @media screen and (max-width: 1750px) {
     .tryabout {
+
         padding: 5vw;
     }
 }

@@ -23,7 +23,7 @@ $(document).ready(function () {
 
     let apiKey1 = "4f82145085msh96574383383d13cp17d4bcjsnfeec1f433131" // Jeorge's Key
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
-    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
+    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey1}&from=0&sizes=10&q=${searchVal}`;
 
     // console.log(queryURL)
 
@@ -34,116 +34,167 @@ $(document).ready(function () {
 
       console.log(res);
 
+      for (let i = 0; i < res.results.length; i++) {
+        if (!res.results[i].user_ratings) {
+          res.results.splice(i, 1);
+        }
+      }
+
+      for (let j = 0; j < res.results.length; j++) {
+        if (!res.results[j].user_ratings) {
+          res.results.splice(j, 1);
+        }
+      }
+
+      for (let k = 0; k < res.results.length; k++) {
+        if (res.results[k].recipes) {
+          res.results.splice(k, 1);
+        }
+      }
+
+      for (let l = 0; l < res.results.length; l++) {
+        if (res.results[l].recipes) {
+          res.results.splice(l, 1);
+        }
+      }
+
+      for (let z = 0; z < res.results.length; z++) {
+        if (res.results[z].user_ratings && res.results[z].user_ratings.score === null) {
+          res.results[z].user_ratings.score = 0;
+        }
+      }
+
+      console.log(res.results);
+
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
+      let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
 
       let sortForm = $("<form>").text("Sort by: ");
       let sortSelect = $("<select>").addClass("sort-by").css("width", "220px");
-      recipeDiv.append(sortForm);
+      recipeForm.append(sortForm);
       sortForm.append(sortSelect);
 
+      let sortDefault = $("<option>");
       let sortHighApprove = $("<option>").attr("value", "highest-approve").text("Highest Approval %");
       let sortLowApprove = $("<option>").attr("value", "lowest-approve").text("Lowest Approval %");
       let sortHighPositive = $("<option>").attr("value", "most-positive").text("Most Positive Reviews");
       let sortHighNegative = $("<option>").attr("value", "most-negative").text("Most Negative Reviews");
 
-      sortSelect.append(sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
-
-      let dropDown = $(".sort-by").val();
-
-      if (dropDown === "highest-approve") {
-        res.results.sort(function (a, b) { return parseFloat(b.user_ratings.score) - parseFloat(a.user_ratings.score) });
-      }
-      else if (dropDown === "lowest-approve") {
-        res.results.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
-      }
-      else if (dropDown === "most-positive") {
-        res.results.sort(function (a, b) { return parseFloat(b.user_count - positive) - parseFloat(a.user_ratings.count - positive) });
-      }
-      else if (dropDown === "most-negative") {
-        res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count - negative) - parseFloat(a.user_ratings.count - negative) });
-      }
+      sortSelect.append(sortDefault, sortHighApprove, sortLowApprove, sortHighPositive, sortHighNegative);
 
       // Gatekeeper in case there are no results
       if (res.results.length > 0) {
 
-        for (i = 0; i < res.results.length; i++) {
+        renderDataMake();
 
-          // variable for response.results
-          let recipe = res.results[i];
+        sortSelect.change(function () {
 
-          // condition because api call is inconsistent
-          if (recipe.instructions) {
+          let dropDown = sortSelect.val();
 
-            // Create card for each recipe
-            let recipeCard = $("<div>").addClass("card").css({ "width": '60%', "display": "inline-block" });
-            let recipeDivider = $("<div>").addClass("card-divider");
-            let recipeSection = $("<div>").addClass("card-section");
+          if (dropDown === "highest-approve") {
+            recipeDiv.empty();
+            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.score) - parseFloat(a.user_ratings.score) });
+            renderDataMake();
+          }
+          else if (dropDown === "lowest-approve") {
+            recipeDiv.empty();
+            res.results.sort(function (a, b) { return parseFloat(a.user_ratings.score) - parseFloat(b.user_ratings.score) });
+            renderDataMake();
+          }
+          else if (dropDown === "most-positive") {
+            recipeDiv.empty();
+            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count_positive) - parseFloat(a.user_ratings.count_positive) });
+            renderDataMake();
+          }
+          else if (dropDown === "most-negative") {
+            recipeDiv.empty();
+            res.results.sort(function (a, b) { return parseFloat(b.user_ratings.count_negative) - parseFloat(a.user_ratings.count_negative) });
+            renderDataMake();
+          }
 
-            // Name
-            let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
+        });
 
-            // Recipe image
-            let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
-            recipeCard.append(recipeImage);
+        function renderDataMake() {
+          for (let i = 0; i < res.results.length; i++) {
 
-            // User rating
-            let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative; " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+            // variable for response.results
+            let recipe = res.results[i];
 
-            recipeDiv.append(recipeCard);
-            recipeDivider.append(recipeName);
-            recipeSection.append(recipeRating);
+            // condition because api call is inconsistent
+            if (recipe.instructions) {
 
-            recipeCard.append(recipeDivider, recipeImage, recipeSection);
+              // Create card for each recipe
+              let recipeCard = $("<div>").addClass("card").css({ "width": '60%', "display": "inline-block" });
+              let recipeDivider = $("<div>").addClass("card-divider");
+              let recipeSection = $("<div>").addClass("card-section");
 
-            $(".recipe-name").click(function (e) {
+              // Name
+              let recipeName = $("<h5>").append($("<a>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name));
 
-              e.preventDefault();
-              let recipeID = $(this).attr("data-id");
+              // Recipe image
+              let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
+              recipeCard.append(recipeImage);
 
-              if (recipe.id == recipeID) {
+              // User rating
+              let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative; " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
 
-                resultModalContent.empty();
+              recipeDiv.append(recipeCard);
+              recipeDivider.append(recipeName);
+              recipeSection.append(recipeRating);
 
-                let recipeCard = $("<div>").addClass("card");
-                let recipeDivider = $("<div>").addClass("card-divider");
-                let recipeSection = $("<div>").addClass("card-section");
+              recipeCard.append(recipeDivider, recipeImage, recipeSection);
 
-                let recipeName = $("<h4>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
-                let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
-                let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+              $(".recipe-name").click(function (e) {
 
-                resultModalContent.append(recipeCard);
-                recipeCard.append(recipeDivider, recipeImage, recipeSection);
-                recipeDivider.append(recipeName);
-                recipeSection.append(recipeRating);
+                e.preventDefault();
+                let recipeID = $(this).attr("data-id");
 
-                // Video Link if it exists
-                if (recipe.original_video_url) {
-                  let recipeVideo = $("<p>").html("<strong>Video:</strong> ").append($("<a>").attr({ "href": recipe.original_video_url, "target": "_blank" }).text(recipe.original_video_url));
-                  recipeSection.append(recipeVideo);
-                }
+                if (recipe.id == recipeID) {
 
-                // Ingredients
-                recipeSection.append($("<h4>").text("Ingredients:"));
-                let ingredientList = $("<ul>");
-                recipeSection.append(ingredientList);
-                for (j = 0; j < recipe.sections.length; j++) {
-                  for (k = 0; k < recipe.sections[j].components.length; k++) {
-                    ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+                  resultModalContent.empty();
+
+                  let recipeCard = $("<div>").addClass("card");
+                  let recipeDivider = $("<div>").addClass("card-divider");
+                  let recipeSection = $("<div>").addClass("card-section");
+
+                  let recipeName = $("<h4>").addClass("recipe-name").attr("data-id", recipe.id).text(recipe.name);
+                  let recipeImage = $("<img>").attr("src", recipe.thumbnail_url).css({ "margin-top": "20px", "width": "300", "height": "200" });
+                  let recipeRating = $("<p>").html("<strong>User Ratings:</strong> " + recipe.user_ratings.count_positive + " positive, " + recipe.user_ratings.count_negative + " negative, " + (recipe.user_ratings.score * 100).toFixed(2) + "% approval");
+
+                  resultModalContent.append(recipeCard);
+                  recipeCard.append(recipeDivider, recipeImage, recipeSection);
+                  recipeDivider.append(recipeName);
+                  recipeSection.append(recipeRating);
+
+                  // Video Link if it exists
+                  if (recipe.original_video_url) {
+                    let recipeVideo = $("<p>").html("<strong>Video:</strong> ").append($("<a>").attr({ "href": recipe.original_video_url, "target": "_blank" }).text(recipe.original_video_url));
+                    recipeSection.append(recipeVideo);
                   }
+
+                  // Ingredients
+                  recipeSection.append($("<h4>").text("Ingredients:"));
+                  let ingredientList = $("<ul>");
+                  recipeSection.append(ingredientList);
+                  for (let j = 0; j < recipe.sections.length; j++) {
+                    for (let k = 0; k < recipe.sections[j].components.length; k++) {
+                      ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+                    }
+                  }
+
+                  // Instructions of Recipe
+                  resultModalContent.append($("<h4>").text("Instructions:"));
+                  for (let x = 0; x < recipe.instructions.length; x++) {
+                    resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
+                  }
+
                 }
 
-                // Instructions of Recipe
-                resultModalContent.append($("<h4>").text("Instructions:"));
-                for (x = 0; x < recipe.instructions.length; x++) {
-                  resultModalContent.append($("<p>").text(recipe.instructions[x].position + ". " + recipe.instructions[x].display_text));
-                }
+                modalResult.foundation('open');
 
-              }
+              });
 
-              modalResult.foundation('open');
-
-            });
+            }
 
           }
 
@@ -173,25 +224,41 @@ $(document).ready(function () {
       let businesses = res.businesses;
       // console.log(res)
       if (businesses.length > 0) {
+        //Adding a dropdown to dropdown-sort
+        let dropDown = $(".dropdown-sort").css({ "text-align": "center" });
+        dropDown.html(`
+          <form >Sort By:
+          <select name="sort-to-go" class="sort-to-go" style="width:220px;">
+            <option value="default" selected>Default</option>
+            <option value="high-rating">Highest Rating</option>
+            <option value="low-rating">Lowest Rating</option>
+            <option value="high-review">Highest Reviews</option>
+            <option value="low-review">Lowest Reviews</option>
+          </select>
+          </form>
+        `);
 
         for (business of businesses) {
           let address = business.location.display_address;
+          // const { location: { display_address: { address } } } = business;
+          // console.log(business)
           resultDisplay.append(
-            $(`<div></div>`).html(
+            $(`<div ></div>`).html(
               //Adding data id and data type for checking
               //Encasing the output to a card
               `<div class="card-divider" style="margin-bottom:5px;">
-                <h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a> ${business.price ? business.price : ""}</h5>
+                <h5><a href="#" class="result-btn" data-type="to-go" data-id="${business.id}">${business.name}</a></h5>
               </div>
               <img src="${business.image_url}" alt="${business.name}" style="width:300px;height:200px"/>
               <div class="card-section">
               <p>${address[0]}, ${address[1]}</p>
               <p>${business.phone}</p>
               </div>
-            `).addClass("card").css({ "width": '60%', "display": "inline-block" })
+            `).addClass("card go-card").css({ "width": '60%', "display": "inline-block" }).attr({ "data-rating": business.rating, "data-review": business.review_count })
           ).css({ "text-align": "center" });
         }
         storeSearches([searchVal, location], 'go', queryUrl);
+
       } else {
         resultDisplay.html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
                               <h5>No Results Found!</h5>
@@ -210,11 +277,44 @@ $(document).ready(function () {
     }
   });
 
-  // function resultParser(id, type) {
-  //   if (type === "to-go") {
+  //On change of the dropdown
+  $(".dropdown-sort").on("change", ".sort-to-go", function (e) {
+    let changeVal = $(this).val();
+    console.log("changed")
+    //Find all the div inside the result display
+    let divCards = resultDisplay.find(".go-card");
+    if (changeVal === "high-rating") {
+      divCards.sort(function (a, b) {
+        let cardARating = parseFloat($(a).attr("data-rating"));
+        let cardBRating = parseFloat($(b).attr("data-rating"));
+        return cardBRating - cardARating;
+      });
+      resultDisplay.html(divCards)
+    } else if (changeVal === "low-rating") {
+      divCards.sort(function (a, b) {
+        let cardARating = parseFloat($(a).attr("data-rating"));
+        let cardBRating = parseFloat($(b).attr("data-rating"));
+        return cardARating - cardBRating;
+      });
+      resultDisplay.html(divCards)
+    } else if (changeVal === "high-review") {
+      divCards.sort(function (a, b) {
+        let cardAReview = parseFloat($(a).attr("data-review"));
+        let cardBReview = parseFloat($(b).attr("data-review"));
+        return cardBReview - cardAReview;
+      });
+      resultDisplay.html(divCards)
+    } else if (changeVal === "low-review") {
+      divCards.sort(function (a, b) {
+        let cardAReview = parseFloat($(a).attr("data-review"));
+        let cardBReview = parseFloat($(b).attr("data-review"));
+        return cardAReview - cardBReview;
+      });
+      resultDisplay.html(divCards)
+    } else {
 
-  //   }
-  // }
+    }
+  });
 
   function yelpResultCaller(id) {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}`;
@@ -258,9 +358,11 @@ $(document).ready(function () {
   function storeSearches(search, type, url) {
     // console.log(search[0] ? search[0] : search)
     let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
+    const searchVal = Array.isArray(search) ? search[0] : search;
+    const locationVal = Array.isArray(search) ? search[1] : '';
     const searchObjInit = {
-      search: Array.isArray(search) ? search[0] : search,
-      location: Array.isArray(search) ? search[1] : '',
+      search: searchVal,
+      location: locationVal,
       url: url,
       type: type,
     };
@@ -269,12 +371,17 @@ $(document).ready(function () {
       storedSearches = [];
       storedSearches.push(searchObjInit);
     } else {
-      let searchObj = storedSearches.find(element => element.url === url);
+      let searchObj = storedSearches.find(element => element.search === searchVal && element.type === type);
+      // console.log(searchObj)
       if (!searchObj) {
         storedSearches.push(searchObjInit);
       }
     }
     localStorage.setItem("toMakeToGo", JSON.stringify(storedSearches));
   }
+
+  // function isExisting(search) {
+  //   return search.search === search && search.type === type
+  // }
 
 });
