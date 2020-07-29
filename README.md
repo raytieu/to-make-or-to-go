@@ -13,7 +13,8 @@ Users can decide whether TO MAKE their meal or TO GO to a restaurant by clicking
 
 Additional features include:  
 -Local Storage capability that will store the user's previous search terms/locations as clickable links for convenient access.  
--Dropdown in the results page that can sort the results by the following options: highest rated, lowest rated, most reviews, and least reviews.
+-Dropdown in the results page that can sort the results by the following options: highest rated, lowest rated, most reviews, and least reviews.  
+-E-mail function at the bottom of each result's pop-up where you can e-mail the recipe/restaurant details to yourself or friends/family!
 
 ```
 
