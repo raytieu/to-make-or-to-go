@@ -158,19 +158,28 @@ $(document).ready(function () {
                   // Recipe Ingredients
                   recipeSection.append($("<h5>").html("<strong>Ingredients:</strong>"));
                   let ingredientList = $("<ul>");
+                  let appendIngredients = "";
                   recipeSection.append(ingredientList);
                   for (let j = 0; j < recipe.sections.length; j++) {
                     for (let k = 0; k < recipe.sections[j].components.length; k++) {
                       ingredientList.append($("<li>").text(recipe.sections[j].components[k].raw_text));
+                      appendIngredients += `<tr><td>${recipe.sections[j].components[k].raw_text}</td></tr>`
                     }
                   }
 
                   // Recipe Instructions
                   recipeSection.append($("<h5>").html("<strong>Instructions:</strong>"));
+                  let appendInstructions = "";
                   for (let x = 0; x < recipe.instructions.length; x++) {
                     recipeSection.append($("<p>").html("<strong>" + recipe.instructions[x].position + "</strong>" + ". " + recipe.instructions[x].display_text));
+                    appendInstructions += `<tr><td><strong>${recipe.instructions[x].position}</strong>. ${recipe.instructions[x].display_text}</td></tr>`
                   }
-
+                  recipeSection.append(`<div class="error-call"></div>`)
+                  recipeSection.append($(`<div></div>`).addClass("grid-x").css({ "margin-top": "10px" })
+                    .append($(`<input type="email" class="cell email-input" placeholder="E.g. johndoe@isp.com" />`),
+                      $(`<button>Send to Email&nbsp; <i class="fa fa-paper-plane" aria-hidden="true"></i></button>`).addClass("cell primary button send-email")
+                        .attr({ 'data-name': recipe.name, "data-ingredients": appendIngredients, "data-instructions": appendInstructions, "data-type": "make", "data-src": recipe.thumbnail_url })));
+                  // console.log(recipe)
                 }
 
                 modalResult.foundation('open');
@@ -186,8 +195,8 @@ $(document).ready(function () {
       // Remove dropdown menu and display callout if no search results
       else {
         recipeForm.empty();
-        resultDisplay.html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
-        <h5>No Results Found!</h5></div>`);
+        resultDisplay.html(`< div class="callout alert" style = "text-align:center;margin-top:10px;" >
+                    <h5>No Results Found!</h5></div > `);
       }
 
       // Store search terms and queryURL into Local Storage
@@ -230,8 +239,6 @@ $(document).ready(function () {
 
         for (business of businesses) {
           let address = business.location.display_address;
-          // const { location: { display_address: { address } } } = business;
-          // console.log(business)
           resultDisplay.append(
             $(`<div ></div>`).html(
               //Adding data id and data type for checking
@@ -270,7 +277,7 @@ $(document).ready(function () {
   //On change of the dropdown
   $(".dropdown-sort").on("change", ".sort-to-go", function (e) {
     let changeVal = $(this).val();
-    console.log("changed")
+    // console.log("changed")
     //Find all the div inside the result display
     let divCards = resultDisplay.find(".go-card");
     if (changeVal === "high-rating") {
@@ -308,7 +315,6 @@ $(document).ready(function () {
     let queryUrl = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}`;
     resultModalContent.empty()
     const apiKey = 'EcekOi57siTKO6p6p9D5elbIoA0MqCpOTQU-E9D2UH6vuvZ3JAy8s9c4aDAhKxMQ9NieE0DP6oY7UPrBx-Xql4ISVlnBagKJHV_Swb7oxAqWvX6dR-vpm0FSmGMWX3Yx';
-    // console.log(queryUrl)
     $.ajax({
       url: queryUrl,
       method: 'GET',
@@ -317,7 +323,7 @@ $(document).ready(function () {
       },
       dataType: 'json'
     }).then(function (res) {
-
+      resultModalContent.empty();
       //Initializing Card 
       let card = $(`<div></div>`).addClass("card")
       let cardDivider = $(`<div></div>`).addClass("card-divider").html(`<h4>${res.name} ${res.price ? res.price : ""}</h4>`)
@@ -336,7 +342,10 @@ $(document).ready(function () {
                   frameborder="0" style="border:0"
                   src="https://www.google.com/maps/embed/v1/search?key=AIzaSyA-GRo-XmaBhR1SmutbREnSA6IlbJFJi0g&q=${res.name.trim().replace("&", "")}&center=${res.coordinates.latitude + "," + res.coordinates.longitude}&zoom=18" allowfullscreen>
                 </iframe>`)
-      let sendEInput = $(`<input type="email" placeholder="E.g. johndoe@isp.com"> <button class="primary button">Send to Email</button>`)
+      let sendEInput = $(`<div class="error-call"></div> <div className="grid-x" style="margin-top:10px;"> 
+                          <input type="email" class="cell email-input" placeholder="E.g. johndoe@isp.com"> 
+                          <button class="cell primary button send-email" data-name="${res.name}" data-type="go" data-address="${res.location.display_address[0]}, ${res.location.display_address[1]}" data-url="${res.url}" data-src="${res.image_url}">Send to Email&nbsp; <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                          </div>`);
       cardSection.append(phoneNum, address, rating, transaction, map, sendEInput)
       card.append(cardDivider, resImg, cardSection)
       resultModalContent.append(card);
@@ -345,22 +354,20 @@ $(document).ready(function () {
   }
 
   function storeSearches(search, type, url) {
-    // console.log(search[0] ? search[0] : search)
     let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
     const searchVal = Array.isArray(search) ? search[0] : search;
     const locationVal = Array.isArray(search) ? search[1] : '';
     const searchObjInit = {
-      search: searchVal,
-      location: locationVal,
+      search: searchVal.toLowerCase(),
+      location: locationVal.toLowerCase(),
       url: url,
       type: type,
     };
-    // console.log(searchObjInit);
     if (storedSearches === null) {
       storedSearches = [];
       storedSearches.push(searchObjInit);
     } else {
-      let searchObj = storedSearches.find(element => element.search === searchVal && element.type === type);
+      let searchObj = storedSearches.find(element => element.search === searchVal.toLowerCase() && element.type === type && element.location === locationVal.toLowerCase());
       // console.log(searchObj)
       if (!searchObj) {
         storedSearches.push(searchObjInit);
@@ -369,24 +376,107 @@ $(document).ready(function () {
     localStorage.setItem("toMakeToGo", JSON.stringify(storedSearches));
   }
 
-  // function isExisting(search) {
-  //   return search.search === search && search.type === type
-  // }
+  resultModalContent.on("click", ".send-email", sendEmail);
 
-  function sendEmail(emailAdd, value, type, url) {
-
-    Email.send({
-      SecureToken: "672072a2-d24f-4024-bc1e-c170cf07a781",
-      To: "jeorgekhenr@gmail.com",
-      From: "tomake.togo@gmail.com",
-      Subject: "test tomake togo",
-      Body: "And this is the body"
-    }).then(
-      message => alert(message)
-    );
-
+  //Source https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
   }
 
-  // sendEmail();
+  function sendEmail() {
+    const emailAdd = $(".email-input").val();
+    if (emailAdd && validateEmail(emailAdd)) {
+      let body = parseEmailContent(this)
+      // console.log(body)
+      Email.send({
+        SecureToken: "672072a2-d24f-4024-bc1e-c170cf07a781",
+        To: emailAdd,
+        From: "tomake.togo@gmail.com",
+        Subject: "Thank you for your using To Make or To Go!",
+        Body: body
+      }).then(
+        $(".error-call").html(`<div class="callout success" style="text-align:center;margin-top:10px;">
+                              <h5>Email Sent!</h5>
+                            </div>`)
+      );
+    } else {
+      $(".error-call").html(`<div class="callout alert" style="text-align:center;margin-top:10px;">
+                              <h5>Invalid Email!</h5>
+                            </div>`);
+    }
+  }
 
+  function parseEmailContent(container) {
+    let that = $(container);
+    if (that.data('type') === "make") {
+
+      // console.log(ingredients)
+      return `<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                  <title>To Make or To Go</title>
+                </head>
+                <body style="margin: 0; padding: 0;">
+                  <table align="center" border="1" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
+                  <tr>
+                  <td bgcolor="#52bf6c" style="padding: 40px 30px 40px 30px;"></td>
+                </tr>
+                <tr>
+                  <td align="center">
+                  <img width="300px" height="200px" src="${that.data("src")}" alt="To Make or To Go">
+                  </td>
+                </tr>
+                <tr>
+                  <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
+                    <p><strong>Recipe Name : </strong>&nbsp; ${that.data("name")}</p>
+                    <p><strong>Ingredients : </strong><table style="margin: 10px 40px;">${that.data("ingredients")}</table></p>
+                    <p><strong>Instructions : </strong><table style="margin: 10px 40px;">${that.data("instructions")}</table></p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td bgcolor="#52bf6c" style="padding: 40px 10px 40px 10px;" align="center">© Created by Jeorge Donato, Duyen Pham, Raymond Tieu, and Alex Tran © 2020</td>
+                </tr>
+                </table >
+                </body >
+                </html > `
+    } else {
+      return `<!DOCTYPE html >
+                <html lang="en">
+                  <head>
+                    <meta charset="UTF-8">
+                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                          <title>To Make or To Go</title>
+                  </head>
+                  <body style="margin: 0; padding: 0;">
+                      <table align="center" border="1" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
+                        <tr>
+                          <td bgcolor="#52bf6c" style="padding: 40px 30px 40px 30px;"></td>
+                        </tr>
+                        <tr>
+                          <td align="center">
+                            <img width="300px" height="200px" src="${that.data("src")}" alt="To Make or To Go">
+                        </td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
+                            <p><strong>Restaurant Name : </strong>&nbsp; ${that.data('name')}</p>
+                            <p><strong>Address : </strong>&nbsp; ${that.data('address')}</p>
+                            <p><strong>Yelp URL : </strong>&nbsp; <a href="${that.data('url')}" target="_blank">${that.data('name')}</a></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#52bf6c" style="padding: 40px 10px 40px 10px;" align="center">© Created by Jeorge Donato, Duyen Pham, Raymond Tieu, and Alex Tran © 2020</td>
+                        </tr>
+                      </table>
+                    </body>
+                  </html>`
+    }
+  }
 });
+
