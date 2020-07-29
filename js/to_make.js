@@ -25,7 +25,7 @@ $(document).ready(function () {
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
     let apiKey3 = "4a7265ba2bmshe954884435eef14p14dc57jsn70a654005e7a" // Alex's Key
     let apiKey4 = "9a93dadb97mshe001d742b476bfep136ad9jsna2e0130232fb" // Duyen's Key
-    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey1}&from=0&sizes=10&q=${searchVal}`;
+    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey3}&from=0&sizes=10&q=${searchVal}`;
 
     $.ajax({
       url: queryURL,
@@ -33,7 +33,7 @@ $(document).ready(function () {
     }).then(function (res) {
 
       // Filter out inconsistencies from results, for sort feature
-      let filteredResults = res.results.filter(function(result) {
+      let filteredResults = res.results.filter(function (result) {
         return result.user_ratings;
       });
 
@@ -46,7 +46,7 @@ $(document).ready(function () {
 
       // Div to append all the search results
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
-      
+
       // Add Dropdown menu to sort the search results
       let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
       let sortForm = $("<form>").text("Sort by: ");
@@ -182,7 +182,7 @@ $(document).ready(function () {
           }
 
         }
-      } 
+      }
       // Remove dropdown menu and display callout if no search results
       else {
         recipeForm.empty();
