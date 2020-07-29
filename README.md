@@ -30,9 +30,11 @@ Google Map
 Tasty
 Yelp
 ```
-### Application's Screenshots:
-![Image 1](./asset/p1.png)
-![Image 2](./asset/p2.png)
 
 ### Link:
 https://raytieu.github.io/to-make-or-to-go/
+
+### Application's Screenshots:
+![Image 1](./asset/p1.png)
+
+![Image 2](./asset/p2.png)
