@@ -20,19 +20,25 @@ a {
     font-weight: bold;
     float: center;
     color: blue;
-    text-align: center;
     padding: 10px;
     text-decoration: none;
     font-size: 30px;
-    line-height: 200px;
     border-radius: 100px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
     -ms-border-radius: 100px;
     -o-border-radius: 100px;
 }
-.active{
-    text-align: center;
+
+.myHeaderTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#logo {
+    max-height: 100px;
 }
 
 /* Change the background color on mouse-over */
