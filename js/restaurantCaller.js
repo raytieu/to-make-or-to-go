@@ -27,7 +27,9 @@ $(document).ready(function () {
         $(`<h4></h4>`).text("To Make"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Chicken" class="search-input" />`),
         $(`<label></label>`).html(`Search History`),
+        $(`<br>`),
         $(`<ul class="dropdown menu searches" data-dropdown-menu></ul>`).html(constructSearches(searches)),
+        $(`<br>`),
         $(`<button type="button" class="button clear-to-make" style="color:white;float:left;"></button>`).html(`<i class="fa fa-trash" aria-hidden="true"></i> Clear History`),
         $(`<button type="button" class="success button search-modal-btn" data-search-type="make" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
       );
@@ -40,7 +42,9 @@ $(document).ready(function () {
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Fried Chicken" class="search-input" />`),
         $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orange County, Irvine, Texas" class="search-location" />`),
         $(`<label></label>`).html(`Search History`),
+        $(`<br>`),
         $(`<ul class="dropdown menu searches" data-dropdown-menu></ul>`).html(constructSearches(searches)),
+        $(`<br>`),
         $(`<button type="button" class="button clear-to-go" style="color:white;float:left;"></button>`).html(`<i class="fa fa-trash" aria-hidden="true"></i> Clear History`),
         $(`<button type="button" class="success button search-modal-btn" data-search-type="go" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
       );
