@@ -336,9 +336,10 @@ $(document).ready(function () {
                   frameborder="0" style="border:0"
                   src="https://www.google.com/maps/embed/v1/search?key=AIzaSyA-GRo-XmaBhR1SmutbREnSA6IlbJFJi0g&q=${res.name.trim().replace("&", "")}&center=${res.coordinates.latitude + "," + res.coordinates.longitude}&zoom=18" allowfullscreen>
                 </iframe>`)
-      cardSection.append(phoneNum, address, rating, transaction, map)
+      let sendEInput = $(`<input type="email" placeholder="E.g. johndoe@isp.com"> <button class="primary button">Send to Email</button>`)
+      cardSection.append(phoneNum, address, rating, transaction, map, sendEInput)
       card.append(cardDivider, resImg, cardSection)
-      resultModalContent.append(card)
+      resultModalContent.append(card);
       modalResult.foundation('open');
     })
   }
@@ -371,5 +372,21 @@ $(document).ready(function () {
   // function isExisting(search) {
   //   return search.search === search && search.type === type
   // }
+
+  function sendEmail(emailAdd, value, type, url) {
+
+    Email.send({
+      SecureToken: "672072a2-d24f-4024-bc1e-c170cf07a781",
+      To: "jeorgekhenr@gmail.com",
+      From: "tomake.togo@gmail.com",
+      Subject: "test tomake togo",
+      Body: "And this is the body"
+    }).then(
+      message => alert(message)
+    );
+
+  }
+
+  // sendEmail();
 
 });
