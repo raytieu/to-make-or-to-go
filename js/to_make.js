@@ -33,7 +33,7 @@ $(document).ready(function () {
     }).then(function (res) {
 
       // Filter out inconsistencies from results, for sort feature
-      let filteredResults = res.results.filter(function(result) {
+      let filteredResults = res.results.filter(function (result) {
         return result.user_ratings;
       });
 
@@ -46,7 +46,7 @@ $(document).ready(function () {
 
       // Div to append all the search results
       let recipeDiv = $(".result-display").css({ "text-align": "center" });
-      
+
       // Add Dropdown menu to sort the search results
       let recipeForm = $(".dropdown-sort").css({ "text-align": "center" });
       let sortForm = $("<form>").text("Sort by: ");
@@ -182,7 +182,7 @@ $(document).ready(function () {
           }
 
         }
-      } 
+      }
       // Remove dropdown menu and display callout if no search results
       else {
         recipeForm.empty();
@@ -336,9 +336,10 @@ $(document).ready(function () {
                   frameborder="0" style="border:0"
                   src="https://www.google.com/maps/embed/v1/search?key=AIzaSyA-GRo-XmaBhR1SmutbREnSA6IlbJFJi0g&q=${res.name.trim().replace("&", "")}&center=${res.coordinates.latitude + "," + res.coordinates.longitude}&zoom=18" allowfullscreen>
                 </iframe>`)
-      cardSection.append(phoneNum, address, rating, transaction, map)
+      let sendEInput = $(`<input type="email" placeholder="E.g. johndoe@isp.com"> <button class="primary button">Send to Email</button>`)
+      cardSection.append(phoneNum, address, rating, transaction, map, sendEInput)
       card.append(cardDivider, resImg, cardSection)
-      resultModalContent.append(card)
+      resultModalContent.append(card);
       modalResult.foundation('open');
     })
   }
@@ -371,5 +372,21 @@ $(document).ready(function () {
   // function isExisting(search) {
   //   return search.search === search && search.type === type
   // }
+
+  function sendEmail(emailAdd, value, type, url) {
+
+    Email.send({
+      SecureToken: "672072a2-d24f-4024-bc1e-c170cf07a781",
+      To: "jeorgekhenr@gmail.com",
+      From: "tomake.togo@gmail.com",
+      Subject: "test tomake togo",
+      Body: "And this is the body"
+    }).then(
+      message => alert(message)
+    );
+
+  }
+
+  // sendEmail();
 
 });
