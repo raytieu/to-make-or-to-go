@@ -222,8 +222,8 @@ $(document).ready(function () {
             <option value="default" selected></option>
             <option value="high-rating">Highest Rating</option>
             <option value="low-rating">Lowest Rating</option>
-            <option value="high-review">Highest Reviews</option>
-            <option value="low-review">Lowest Reviews</option>
+            <option value="high-review">Most Reviews</option>
+            <option value="low-review">Least Reviews</option>
           </select>
           </form>
         `);
