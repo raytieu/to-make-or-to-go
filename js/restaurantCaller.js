@@ -26,7 +26,11 @@ $(document).ready(function () {
       searchModalContent.append(
         $(`<h4></h4>`).text("To Make"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Chicken" class="search-input" />`),
+        $(`<label></label>`).html(`Search History`),
+        $(`<br>`),
         $(`<ul class="dropdown menu searches" data-dropdown-menu></ul>`).html(constructSearches(searches)),
+        $(`<br>`),
+        $(`<button type="button" class="button clear-to-make" style="color:white;float:left;"></button>`).html(`<i class="fa fa-trash" aria-hidden="true"></i> Clear History`),
         $(`<button type="button" class="success button search-modal-btn" data-search-type="make" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
       );
       new Foundation.DropdownMenu($('.searches'));
@@ -37,13 +41,18 @@ $(document).ready(function () {
         $(`<h4></h4>`).text("To Go"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Fried Chicken" class="search-input" />`),
         $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orange County, Irvine, Texas" class="search-location" />`),
+        $(`<label></label>`).html(`Search History`),
+        $(`<br>`),
         $(`<ul class="dropdown menu searches" data-dropdown-menu></ul>`).html(constructSearches(searches)),
+        $(`<br>`),
+        $(`<button type="button" class="button clear-to-go" style="color:white;float:left;"></button>`).html(`<i class="fa fa-trash" aria-hidden="true"></i> Clear History`),
         $(`<button type="button" class="success button search-modal-btn" data-search-type="go" style="color:white;float:right;"></button>`).html(`<i class="fa fa-search" aria-hidden="true"></i> Search`)
       );
       new Foundation.DropdownMenu($('.searches'));
     }
     modal.foundation('open');
   }
+
 
   function constructSearches(searches) {
     let li = '';
@@ -60,7 +69,6 @@ $(document).ready(function () {
       return '';
     }
   }
-
 
 
   //Attaching a click event to modal's search button
@@ -82,6 +90,7 @@ $(document).ready(function () {
     }
   });
 
+
   searchModalContent.on('click', '.li-search', function (e) {
     e.preventDefault();
     const type = $(this).attr('data-type');
@@ -94,7 +103,6 @@ $(document).ready(function () {
       window.location.href = `result.html?type=go&search=${search}&location=${location}`;
     }
   })
-
 
 
   function retrieveSearches(type) {
@@ -110,6 +118,27 @@ $(document).ready(function () {
   }
 
 
+  searchModalContent.on('click', '.clear-to-make', function (e) {
+    e.preventDefault();
+    let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
+    let clearToMake = storedSearches.filter(function (search) {
+      return search.type === "go";
+    });
+    localStorage.setItem("toMakeToGo", JSON.stringify(clearToMake));
+    searchModalContent.empty();
+    parseSearchContent("to make");
+  });
 
+
+  searchModalContent.on('click', '.clear-to-go', function (e) {
+    e.preventDefault();
+    let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
+    let clearToGo = storedSearches.filter(function (search) {
+      return search.type === "make";
+    });
+    localStorage.setItem("toMakeToGo", JSON.stringify(clearToGo));
+    searchModalContent.empty();
+    parseSearchContent("to go");
+  });
 
 });

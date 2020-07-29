@@ -9,7 +9,7 @@ img {
     align: center;
     display: center;
     margin: 0 auto;
-    width: auto;
+    width: 300px;
     height: auto;
     background-color: rgb(226, 210, 145);
     margin-bottom: 20;
@@ -63,4 +63,7 @@ footer {
 }
 .recipe-name{
   text-align: center;
+}
+.grid-container{
+  margin-bottom: 50px;
 }
