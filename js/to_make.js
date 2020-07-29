@@ -156,7 +156,7 @@ $(document).ready(function () {
                   }
 
                   // Recipe Ingredients
-                  recipeSection.append($("<h4>").text("Ingredients:"));
+                  recipeSection.append($("<h5>").html("<strong>Ingredients:</strong>"));
                   let ingredientList = $("<ul>");
                   recipeSection.append(ingredientList);
                   for (let j = 0; j < recipe.sections.length; j++) {
@@ -166,7 +166,7 @@ $(document).ready(function () {
                   }
 
                   // Recipe Instructions
-                  recipeSection.append($("<h4>").text("Instructions:"));
+                  recipeSection.append($("<h5>").html("<strong>Instructions:</strong>"));
                   for (let x = 0; x < recipe.instructions.length; x++) {
                     recipeSection.append($("<p>").html("<strong>" + recipe.instructions[x].position + "</strong>" + ". " + recipe.instructions[x].display_text));
                   }
