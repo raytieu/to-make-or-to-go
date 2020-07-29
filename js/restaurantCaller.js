@@ -117,7 +117,7 @@ $(document).ready(function () {
     }
   }
 
-
+  // Click event to clear to-make history
   searchModalContent.on('click', '.clear-to-make', function (e) {
     e.preventDefault();
     let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
@@ -129,7 +129,7 @@ $(document).ready(function () {
     parseSearchContent("to make");
   });
 
-
+  // Click event to clear to-go history
   searchModalContent.on('click', '.clear-to-go', function (e) {
     e.preventDefault();
     let storedSearches = JSON.parse(localStorage.getItem("toMakeToGo"));
