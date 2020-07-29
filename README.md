@@ -32,6 +32,4 @@ Yelp
 ```
 
 ### Link:
-```
 https://raytieu.github.io/to-make-or-to-go/
-```

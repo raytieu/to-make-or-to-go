@@ -240,3 +240,27 @@ blockquote, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, li, ol, p, pre, td, t
     margin-top: 8px;
     margin-bottom: 8px;
 }
+
+.orbit-image {
+    width: 850px;
+    height: 400px;
+}
+
+.orbit-container::after {
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.orbit-caption {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+}
