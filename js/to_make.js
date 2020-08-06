@@ -25,7 +25,7 @@ $(document).ready(function () {
     let apiKey2 = "0239e03514msh2b775b47a0eb3cep1158c7jsn32e6781cfbcd" // Raymond's Key
     let apiKey3 = "4a7265ba2bmshe954884435eef14p14dc57jsn70a654005e7a" // Alex's Key
     let apiKey4 = "9a93dadb97mshe001d742b476bfep136ad9jsna2e0130232fb" // Duyen's Key
-    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey4}&from=0&sizes=10&q=${searchVal}`;
+    let queryURL = `https://tasty.p.rapidapi.com/recipes/list?rapidapi-key=${apiKey2}&from=0&sizes=10&q=${searchVal}`;
 
     $.ajax({
       url: queryURL,
