@@ -26,6 +26,7 @@ $(document).ready(function () {
       searchModalContent.append(
         $(`<h4></h4>`).text("To Make"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Chicken" class="search-input" />`),
+        $(`<label></label>`).addClass("modal-error"),
         $(`<label></label>`).html(`Search History`),
         $(`<br>`),
         $(`<ul class="dropdown menu searches" data-dropdown-menu></ul>`).html(constructSearches(searches)),
@@ -41,6 +42,7 @@ $(document).ready(function () {
         $(`<h4></h4>`).text("To Go"),
         $(`<label></label>`).html(`Search Criteria <input type="text" placeholder="E.g. Pho, Steak, Fried Chicken" class="search-input" />`),
         $(`<label></label>`).html(`Search Location <input type="text" placeholder="E.g. Orange County, Irvine, Texas" class="search-location" />`),
+        $(`<label></label>`).addClass("modal-error"),
         $(`<label></label>`).html(`Search History`),
         $(`<br>`),
         $(`<ul class="dropdown menu searches" data-dropdown-menu></ul>`).html(constructSearches(searches)),
@@ -80,12 +82,16 @@ $(document).ready(function () {
       let value = $(".search-input").val();
       if (value) {
         window.location.href = `result.html?type=make&search=${value}`;
+      } else {
+        $(".modal-error").html(`<div style="padding:5px" class="callout alert"><strong>Search Criteria is Required! </strong></div>`);
       }
     } else {
       let value = $(".search-input").val();
       let location = $(".search-location").val();
       if (value && location) {
         window.location.href = `result.html?type=go&search=${value}&location=${location}`;
+      } else {
+        $(".modal-error").html(`<div style="padding:5px" class="callout alert"><strong>All Fields are Required!</strong></div>`);
       }
     }
   });
